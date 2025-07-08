@@ -1,8 +1,23 @@
-import React from 'react';
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+
 import LoginPage from './Pages/LoginPage/LoginPage';
+import Recuperar from './Pages/Recuperar/Recuperar';
+import Registrar from './Pages/Registrar/Registrar';
+import PaginaPrincipal from './Pages/PaginaPrincipal/PaginaPrincipal';
+
+
 
 function App() {
-  return <LoginPage />;
+  return (
+    <BrowserRouter>
+    <Routes>
+      <Route path="/" element={<LoginPage/>}/>
+      <Route path="/Recuperar" element={<Recuperar/>}/>
+      <Route path="/Registrar" element={<Registrar/>}/>
+      <Route path="/PaginaPrincipal" element={<PaginaPrincipal/>}/>
+      </Routes>
+      </BrowserRouter>
+  );
 }
 
 export default App;

@@ -1,4 +1,30 @@
-import logo from './logo.svg';
+import React from 'react';
+import LoginPage from './Pages/LoginPage/LoginPage';
+
+function App() {
+  return <LoginPage />;
+}
+
+export default App;
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+/*import logo from './logo.svg';
 import './App.css';
 
 function App() {
@@ -22,4 +48,4 @@ function App() {
   );
 }
 
-export default App;
+export default App;*/

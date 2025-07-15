@@ -1,5 +1,6 @@
 import React from 'react';
 
+
 function Recuperar() {
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -8,10 +9,11 @@ function Recuperar() {
   };
 
   return (
-    <div className="container vh-100 d-flex justify-content-center align-items-center">
+    
+    <div className="container vh-100 d-flex justify-content-center align-items-center ">
       <div className="card shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>
         <div className="card-body">
-          <h3 className="card-title text-center mb-4 text-success">Recuperar Contraseña</h3>
+          <h3 className="card-title text-center mb-4 text-danger">Recuperar Contraseña</h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="inputEmail" className="form-label">Correo electrónico</label>
@@ -25,7 +27,7 @@ function Recuperar() {
             </div>
 
             <div className="card-footer text-center">
-              <button type="submit" className="btn btn-success w-100">Enviar Correo</button>
+              <button type="submit" className="btn btn-danger w-100">Enviar Correo</button>
             </div>
 
             <div className="card-footer text-center mt-2">

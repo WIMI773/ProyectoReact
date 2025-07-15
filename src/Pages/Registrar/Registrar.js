@@ -11,7 +11,7 @@ function Registrar() {
     <div className="container mt-5">
       <div className="card shadow-sm">
         <div className="card-body">
-          <h3 className="card-title text-center text-success mb-4">Regístrate</h3>
+          <h3 className="card-title text-center text-danger mb-4">Regístrate</h3>
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
               <label htmlFor="inputNombre" className="form-label">Nombres</label>
@@ -108,7 +108,7 @@ function Registrar() {
             </div>
 
             <div className="card-footer text-center">
-              <button type="submit" className="btn btn-success w-100">Enviar</button>
+              <button type="submit" className="btn btn-danger w-100">Enviar</button>
             </div>
           </form>
 

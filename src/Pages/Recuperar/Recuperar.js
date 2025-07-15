@@ -1,4 +1,5 @@
 import React from 'react';
+import './Recuperar.css'
 
 
 function Recuperar() {
@@ -10,8 +11,7 @@ function Recuperar() {
 
   return (
     
-    <div className="container vh-100 d-flex justify-content-center align-items-center ">
-      <div className="card shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>
+<div className="background-recuperar d-flex justify-content-center align-items-center vh-100">      <div className="card shadow-sm" style={{ maxWidth: "400px", width: "100%" }}>
         <div className="card-body">
           <h3 className="card-title text-center mb-4 text-danger">Recuperar Contraseña</h3>
           <form onSubmit={handleSubmit}>

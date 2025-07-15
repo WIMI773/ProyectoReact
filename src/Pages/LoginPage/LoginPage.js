@@ -107,13 +107,13 @@ function LoginPage() {
           </div>
 
           <div className="card-footer text-center mt-3">
-            <small className="text-danger">
+            <small className="text" style={{color: 'white'}}>
               ¿Olvidaste tu contraseña? <a href="/Recuperar">Reestablece</a>
             </small>
           </div>
 
           <div className="card-footer text-center mt-2">
-            <small className="text-danger">
+            <small className="text" style={{color: 'white'}}>
               ¿No tienes cuenta? <a href="/Registrar">Regístrate</a>
             </small>
           </div>

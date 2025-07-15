@@ -1,0 +1,13 @@
+body, html {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.background-recuperar {
+  background-image: url('./../../images/anuelAA.jpeg'); /* Reemplaza con la ruta real */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  height: 100vh;
+}

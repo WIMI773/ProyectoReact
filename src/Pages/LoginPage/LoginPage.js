@@ -1,67 +1,131 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { auth, googleProvider } from '../../Firebase';
-import { signInWithPopup } from 'firebase/auth';
-import './LoginPage.css';
+import { useState } from 'react';
 import Swal from 'sweetalert2';
-
-const usuarios = [
-  { email: "juan@correo.com", password: "jua123" },
-  { email: "maria@correo.com", password: "mar123" },
-];
+import { auth, googleProvider, db } from '../../Firebase';
+import { signInWithEmailAndPassword, fetchSignInMethodsForEmail, linkWithCredential, EmailAuthProvider, signInWithPopup } from 'firebase/auth';
+import { doc, getDoc } from 'firebase/firestore';
+import './LoginPage.css';
+import carrito from '../../images/carrito.png'; // ✅ Ajusta según tu estructura
 
 function LoginPage() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [remember, setRemember] = useState(false);
 
-  const navigate = useNavigate();
-
-  const handleSubmit = (e) => {
+  // LOGIN CON EMAIL/PASSWORD
+  const handleSubmit = async (e) => {
     e.preventDefault();
 
-    const usuarioValido = usuarios.find(
-      (u) => u.email === email && u.password === password
-    );
+    if (!email || !password) {
+      Swal.fire("Campos vacíos", "Por favor llena todos los campos.", "warning");
+      return;
+    }
 
-    if (usuarioValido) {
-      console.log('Inicio de sesión correcto');
-      if (remember) {
-        localStorage.setItem('usuario', JSON.stringify(usuarioValido));
+    try {
+      const userCredential = await signInWithEmailAndPassword(auth, email, password);
+      const user = userCredential.user;
+
+      // Opcional: verificar si existe documento en Firestore
+      const userDocRef = doc(db, 'usuarios', user.uid);
+      const userSnap = await getDoc(userDocRef);
+
+      if (userSnap.exists()) {
+        const data = userSnap.data();
+        if (data.estado === "Inactivo") {
+          Swal.fire("Acceso denegado", "Tu cuenta está inactiva. Contacta al administrador.", "error");
+          return;
+        }
       }
-      navigate('/PaginaPrincipal');
-    } else {
-      alert('Correo o contraseña incorrectos');
+
+      Swal.fire({
+        title: "¡Bienvenido!",
+        text: `Sesión iniciada como ${user.email}`,
+        icon: "success",
+        timer: 2000,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "/PaginaPrincipal";
+      });
+
+    } catch (error) {
+      console.error(error);
+      Swal.fire("Error", "Credenciales incorrectas o usuario no existe.", "error");
     }
   };
 
+  // LOGIN CON GOOGLE
   const handleGoogleLogin = async () => {
     try {
-      const result = await signInWithPopup(auth, googleProvider);
-      const user = result.user;
-      await Swal.fire({
+      const googleResult = await signInWithPopup(auth, googleProvider);
+      const user = googleResult.user;
+
+      // Verificar si ya existía ese correo con otro método
+      const signInMethods = await fetchSignInMethodsForEmail(auth, user.email);
+
+      if (signInMethods.includes('password')) {
+        // Si existe por password hay que vincularlo
+        const password = await solicitarPassword();
+        if (!password) {
+          Swal.fire("Cancelado", "Operación cancelada.", "info");
+          return;
+        }
+
+        // Crear credential de email/password
+        const credential = EmailAuthProvider.credential(user.email, password);
+        await linkWithCredential(user, credential);
+      }
+
+      Swal.fire({
         title: "¡Bienvenido!",
         text: `Sesión iniciada con Google: ${user.email}`,
         icon: "success",
         timer: 2000,
-        showConfirmButton: false,
+        showConfirmButton: false
+      }).then(() => {
+        window.location.href = "/PaginaPrincipal";
       });
-      navigate('/PaginaPrincipal');
+
     } catch (error) {
       console.error(error);
       Swal.fire("Error", "No se pudo iniciar sesión con Google.", "error");
     }
   };
 
+  const solicitarPassword = async () => {
+    const result = await Swal.fire({
+      title: "Contraseña requerida",
+      input: "password",
+      inputLabel: "Introduce tu contraseña para vincular cuentas",
+      inputPlaceholder: "Tu contraseña",
+      showCancelButton: true,
+      confirmButtonText: "Vincular",
+      cancelButtonText: "Cancelar"
+    });
+
+    if (result.isConfirmed && result.value) {
+      return result.value;
+    }
+    return null;
+  };
+
 
   return (
     <div className="login-container">
       <div className='font-login'>
-        <div className="card p-4 shadow-sm login-card" >
-          <h3 className="card-title text-center mb-4 text-danger" >Iniciar Sesión</h3>
+        <div className="card p-4 shadow-sm login-card">
+
+          {/* Logo del carrito + título */}
+          <div className="text-center mb-3">
+            <img
+              src={carrito}
+              alt="Logo Carrito"
+              style={{ width: '60px', marginBottom: '10px' }}
+            />
+            <h3 className="card-title text" style={{ color: '#FFD600' }}>Iniciar Sesión</h3>
+          </div>
+
           <form onSubmit={handleSubmit}>
             <div className="mb-3">
-              <label htmlFor="email" className="form-label" style={{color: 'white'}}>Correo electrónico</label>
+              <label htmlFor="email" className="form-label" style={{ color: 'white' }}>Correo electrónico</label>
               <input
                 type="email"
                 className="form-control"
@@ -73,7 +137,7 @@ function LoginPage() {
             </div>
 
             <div className="mb-3">
-              <label htmlFor="password" className="form-label " style={{color:'white'}}>Contraseña</label>
+              <label htmlFor="password" className="form-label" style={{ color: 'white' }}>Contraseña</label>
               <input
                 type="password"
                 className="form-control"
@@ -92,35 +156,40 @@ function LoginPage() {
                 checked={remember}
                 onChange={(e) => setRemember(e.target.checked)}
               />
-              <label className="form-check-label" style={{color:'white'}} htmlFor="rememberCheck">Recuérdame</label>
+              <label className="form-check-label" htmlFor="rememberCheck" style={{ color: 'white' }}>Recuérdame</label>
             </div>
 
             <div className="card-footer text-center">
-              <button type="submit" className="btn btn-danger w-100 mb-2">Entrar</button>
+              <button type="submit" className="btn btn w-100 mb-2" style={{ backgroundColor: '#FFD600' }}> Entrar</button>
             </div>
           </form>
 
           <div>
-            <button type="button" className='btn btn-dark w-100' style={{backgroundColor:'white', color: 'black'}} onClick={handleGoogleLogin}>
+            <button
+              type="button"
+              className='btn btn-dark w-100'
+              style={{ backgroundColor: 'white', color: '#E42310' }}
+              onClick={handleGoogleLogin}
+            >
               Iniciar Sesión con Google
             </button>
           </div>
 
           <div className="card-footer text-center mt-3">
-            <small className="text" style={{color: 'white'}}>
+            <small className="text" style={{ color: 'white' }}>
               ¿Olvidaste tu contraseña? <a href="/Recuperar">Reestablece</a>
             </small>
           </div>
 
           <div className="card-footer text-center mt-2">
-            <small className="text" style={{color: 'white'}}>
+            <small className="text" style={{ color: 'white' }}>
               ¿No tienes cuenta? <a href="/Registrar">Regístrate</a>
             </small>
           </div>
         </div>
       </div>
-      </div>
-      );
+    </div>
+  );
 }
 
-      export default LoginPage;
+export default LoginPage;

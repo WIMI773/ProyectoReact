@@ -1,19 +1,32 @@
 /* LoginPage.css */
 
 .login-container {
-  background-image: url('./../../images/anuelAA.jpeg'); 
-  height: 100vh;
+  background-image: url('../../images/imagen5.png'); /* ajusta si está en otra ruta */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 20px;
 }
+
 
 
 .login-card {
-  background-color: rgba(255, 255, 255, 0.1) !important; 
-  border: 1px solid #ccc;
-  border-radius: 8px;
+  max-width: 500px; /* 🔽 ajusta el ancho aquí */
+  max-height: 700px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.08) !important; /* semitransparente para que el fondo se vea */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px); /* efecto glassmorphism */
 }
+
+
 
 
 

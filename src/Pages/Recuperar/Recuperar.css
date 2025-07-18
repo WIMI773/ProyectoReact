@@ -5,9 +5,22 @@ body, html {
 }
 
 .background-recuperar {
-  background-image: url('./../../images/anuelAA.jpeg'); /* Reemplaza con la ruta real */
+  background-image: url('../../images/imagen5.png'); /* Reemplaza con la ruta real */
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
   height: 100vh;
 }
+
+.my-reset{
+  max-width: 500px; /* 🔽 ajusta el ancho aquí */
+  max-height: 700px;
+  width: 100%;
+  background-color: rgba(255, 255, 255, 0.08) !important; /* semitransparente para que el fondo se vea */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px); /* efecto glassmorphism */
+}
+
+

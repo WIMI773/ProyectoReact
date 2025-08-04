@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import Swal from 'sweetalert2';
-import { auth, googleProvider, db } from '../../Firebase';
+import { auth, googleProvider, db, signOut } from '../../Firebase';
 import { signInWithEmailAndPassword, fetchSignInMethodsForEmail, linkWithCredential, EmailAuthProvider, signInWithPopup } from 'firebase/auth';
 import { doc, getDoc } from 'firebase/firestore';
 import './LoginPage.css';
@@ -120,6 +120,7 @@ function LoginPage() {
               alt="Logo Carrito"
               style={{ width: '60px', marginBottom: '10px' }}
             />
+            <h3 className="card-title text" style={{ color: '#FFD600' }}>La Amistad</h3>
             <h3 className="card-title text" style={{ color: '#FFD600' }}>Iniciar Sesión</h3>
           </div>
 

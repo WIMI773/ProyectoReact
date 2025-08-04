@@ -9,6 +9,7 @@ import ProtectedRoute from './Pages/components/ProtectedRoute';
 import NotFoundPage from './Pages/components/NotFoundPage';
 import ListUsersPage from './Pages/ListUsers/ListUsersPage';
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
+import Frutas from './Pages/Productos/Frutas';
 
 
 function App() {
@@ -20,9 +21,11 @@ function App() {
         <Route path="/Recuperar" element={<Recuperar />} />
         <Route path="/Registrar" element={<Registrar />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/frutas" element={<Frutas />} />
+                <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
+
 
         {/*Rutas Privadas*/}
-        <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
         <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
 
         {/*Rutas no encontradas*/}

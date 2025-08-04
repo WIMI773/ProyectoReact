@@ -4,7 +4,7 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-function PaginaPrincipal() {
+function Frutas() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
@@ -39,7 +39,7 @@ function PaginaPrincipal() {
       {/* Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
-          <Link className="navbar-brand fw-bold" to="/">
+          <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">
             LaAmistad
           </Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
@@ -48,7 +48,7 @@ function PaginaPrincipal() {
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" to="/">
+                <Link className="nav-link active" to="PaginaPrincipal">
                   Inicio
                 </Link>
               </li>
@@ -121,18 +121,11 @@ function PaginaPrincipal() {
         </div>
       </nav>
 
-      {/* Hero */}
-      <header className="bg-light text-center py-5">
-        <div className="container">
-          <h1 className="display-4">Bienvenido a LaAmistad</h1>
-          <p className="lead">Tus compras diarias, ahora más fáciles y rápidas.</p>
-          <img src="https://via.placeholder.com/800x300" alt="Supermercado" className="img-fluid mt-4 rounded" />
-        </div>
-      </header>
+      
 
       {/* Destacados */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Productos Destacados</h2>
+        <h2 className="mb-4 text-center">Seccion Frutas</h2>
         <div className="row">
           {[{desc:"Ron viejo de caldas 1000ml",src:"/imagenesProductos/ron.png", nombre:"Ron caldas"},
             {desc:"",src:"/imagenesProductos/antioqueño.png"}].map((prod, i) => (
@@ -157,27 +150,11 @@ function PaginaPrincipal() {
         </div>
       </section>
 
-      {/* Ofertas */}
-      <section className="bg-warning py-5 text-center">
-        <div className="container">
-          <h2>Ofertas de la Semana</h2>
-          <p className="lead">Ahorra hasta un 30% en productos seleccionados.</p>
-          <button className="btn btn-danger">Ver Ofertas</button>
-        </div>
-      </section>
+      
 
-      {/* Footer */}
-      <footer className="bg-dark text-light py-4">
-        <div className="container text-center">
-          <p>&copy; {new Date().getFullYear()} LaAmistad Supermercado</p>
-          <p>
-            <Link to="#" className="text-warning">Política de privacidad</Link> |{' '}
-            <Link to="#" className="text-warning">Términos y condiciones</Link>
-          </p>
-        </div>
-      </footer>
+      
     </>
   );
 }
 
-export default PaginaPrincipal;
+export default Frutas;

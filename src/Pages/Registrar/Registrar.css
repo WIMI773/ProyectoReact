@@ -3,12 +3,14 @@
 }
 
 .form-card {
-    background-color: rgba(0, 0, 0, 0.1);
-    border-radius: 20px;
-    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
     padding: 2rem;
     width: 100%;
     max-width: 500px;
+    background-color: rgba(255, 255, 255, 0.08) !important; /* semitransparente para que el fondo se vea */
+  border-radius: 10px;
+  padding: 30px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+  backdrop-filter: blur(8px); /* efecto glassmorphism */
 }
 
 .form-card form {
@@ -17,5 +19,16 @@
 } 
 
 .my-login{
-    background-color: cornflowerblue;
+    background-image: url('../../images/imagen5.png');
+    background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
 }
+
+

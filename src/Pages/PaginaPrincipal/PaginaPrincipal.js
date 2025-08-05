@@ -59,18 +59,7 @@ function PaginaPrincipal() {
       src: "/imagenesProductos/aguila.png",
       precio: 1800
     },
-    {
-      nombre: "Banano",
-      desc: "Banano maduro por libra",
-      src: "/imagenesProductos/banano.png",
-      precio: 500
-    },
-    {
-      nombre: "Pechuga de Pollo",
-      desc: "Pechuga sin hueso por libra",
-      src: "/imagenesProductos/pechuga.png",
-      precio: 10500
-    },
+    
     {
       nombre: "Leche Entera Alpina",
       desc: "Leche en bolsa 1 litro",

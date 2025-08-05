@@ -67,9 +67,8 @@ function Frutas() {
                   <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
                   <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
-                  <li><Link className="dropdown-item" to="/bebidas">Bebidas</Link></li>
-                  <li><Link className="dropdown-item" to="/panaderia">Panadería</Link></li>
-                  <li><Link className="dropdown-item" to="/hogar">Hogar</Link></li>
+                  <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
+                  <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
@@ -122,33 +121,178 @@ function Frutas() {
       </nav>
 
       
+<section className="container py-5">
+  <h2 className="mb-4 text-center">Sección Frutas</h2>
+  <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {[
+      {
+        desc: "Manzana",
+        src: "/imagenesProductos/manzana.webp",
+        nombre: "Manzana Roja"
+      },
+      {
+        desc: "Fresa",
+        src: "/imagenesProductos/fresa.png",
+        nombre: "Fresa"
+      },
+      {
+        desc: "Banano",
+        src: "/imagenesProductos/guineo.webp",
+        nombre: "Banano"
+      },
+      {
+        desc: "Durazno",
+        src: "/imagenesProductos/durazno.png",
+        nombre: "Durazno"
+      },
+      {
+        desc: "Sandia",
+        src: "/imagenesProductos/sandia.png",
+        nombre: "Sandia"
+      },
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
 
-      {/* Destacados */}
-      <section className="container py-5">
-        <h2 className="mb-4 text-center">Seccion Frutas</h2>
-        <div className="row">
-          {[{desc:"Ron viejo de caldas 1000ml",src:"/imagenesProductos/ron.png", nombre:"Ron caldas"},
-            {desc:"",src:"/imagenesProductos/antioqueño.png"}].map((prod, i) => (
-            <div className="col-md-3 mb-4" key={i}>
-              <div className="card h-100">
-                <img
-                  src={prod.src}
-                  className="card-img-top"
-                  alt={`Producto ${i}`}
-                />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title"> {prod.nombre}</h5>
-                  <p className="card-text"> {prod.desc}.</p>
-                  <div className="mt-auto">
-                    <span className="fw-bold">$ {(10 * i).toFixed(2)}</span>
-                    <button className="btn btn-warning btn-sm float-end">Agregar</button>
-                  </div>
-                </div>
-              </div>
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+      
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+      
+
+
+
+
+      
+    ].map((prod, i) => (
+      <div key={i} className="col">
+        <div className="card h-100 shadow-sm d-flex flex-column">
+          <img
+            src={prod.src}
+            className="card-img-top"
+            alt={prod.nombre}
+            style={{ height: '180px', objectFit: 'contain' }}
+          />
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title">{prod.nombre}</h5>
+            <p className="card-text">{prod.desc}</p>
+            <div className="mt-auto d-flex justify-content-between align-items-center">
+              <span className="fw-bold">$ {(10 * i).toFixed(2)}</span>
+              <button className="btn btn-warning btn-sm">Agregar</button>
             </div>
-          ))}
+          </div>
         </div>
-      </section>
+      </div>
+    ))}
+  </div>
+</section>
+
+
 
       
 

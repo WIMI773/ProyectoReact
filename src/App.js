@@ -10,7 +10,11 @@ import NotFoundPage from './Pages/components/NotFoundPage';
 import ListUsersPage from './Pages/ListUsers/ListUsersPage';
 import ResetPassword from './Pages/ResetPassword/ResetPassword';
 import Frutas from './Pages/Productos/Frutas';
-
+import Carnes from './Pages/Productos/Carnes';
+import Lacteos from './Pages/Productos/Lacteos';
+import Aseo from './Pages/Productos/Aseo';
+import Alcohol from './Pages/Productos/Alcohol';
+import Medicamentos from './Pages/Productos/Medicamentos';
 
 function App() {
   return (
@@ -21,7 +25,13 @@ function App() {
         <Route path="/Recuperar" element={<Recuperar />} />
         <Route path="/Registrar" element={<Registrar />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
-        <Route path="/frutas" element={<Frutas />} />
+        <Route path="/Frutas" element={<Frutas />} />
+        <Route path="/Aseo" element={<Aseo />} />
+        <Route path="/Carnes" element={<Carnes />} />
+        <Route path="/Lacteos" element={<Lacteos />} />
+        <Route path="/Alcohol" element={<Alcohol />}/> 
+                <Route path="/Medicamentos" element={<Medicamentos />}/> 
+
                 <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
 
 

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // ← Link agregado
+import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -7,6 +7,24 @@ import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 function Carnes() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  const [productos, setProductos] = useState([
+    { nombre: "Lomo de Cerdo", desc: "Lomo de Cerdo", src: "/imagenesProductos/lomo.webp", precio: 1000, cantidad: 1 },
+    { nombre: "Chuleta de Cerdo", desc: "Chuleta de Cerdo", src: "/imagenesProductos/chuleta.png", precio: 2500, cantidad: 1 },
+    { nombre: "Pechuga de Pollo", desc: "Pechuga de Pollo", src: "/imagenesProductos/pechuga.png", precio: 5000, cantidad: 1 },
+    { nombre: "Carne de Res", desc: "Carne de Res", src: "/imagenesProductos/carne.png", precio: 3000, cantidad: 1 },
+    { nombre: "Costilla de Cerdo", desc: "Costilla de Cerdo", src: "/imagenesProductos/costilla cerdo.png", precio: 4000, cantidad: 1 },
+    { nombre: "Pollo", desc: "Pollo", src: "/imagenesProductos/pollo.png", precio: 3500, cantidad: 1 },
+    { nombre: "Chuleta de Cerdo", desc: "Chuleta de Cerdo", src: "/imagenesProductos/chuleta.png", precio: 2800, cantidad: 1 },
+    { nombre: "Pescado", desc: "Pescado", src: "/imagenesProductos/pescado.png", precio: 1500, cantidad: 1 },
+    { nombre: "Jamon de Cerdo", desc: "Jamon de Cerdo", src: "/imagenesProductos/jamon.png", precio: 3200, cantidad: 1 },
+    { nombre: "Salchicha Ranchera", desc: "Salchicha Ranchera", src: "/imagenesProductos/chorizo.png", precio: 3700, cantidad: 1 },
+    { nombre: "Carne Molida", desc: "CArne Molida", src: "/imagenesProductos/carnemolida.png", precio: 2900, cantidad: 1 },
+    { nombre: "Salchichon Cervecero", desc: "Salchichon Cervecero", src: "/imagenesProductos/salchichon.png", precio: 2600, cantidad: 1 },
+    { nombre: "Costilla de Res", desc: "Costilla de Res", src: "/imagenesProductos/costillares.png", precio: 3000, cantidad: 1 },
+    { nombre: "Chorizo de Pavo", desc: "Chorizo de Pavo", src: "/imagenesProductos/chorizopavo.png", precio: 4500, cantidad: 1 },
+    
+  ]);
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -29,14 +47,20 @@ function Carnes() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        navigate('/'); // Ruta a tu login
+        navigate('/');
       }
     });
   };
 
+  const handleCantidadChange = (index, nuevaCantidad) => {
+    const productosActualizados = [...productos];
+    productosActualizados[index].cantidad = parseInt(nuevaCantidad);
+    setProductos(productosActualizados);
+  };
+
   return (
     <>
-      {/* Navbar */}
+      {/* Navbar (sin cambios) */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
           <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">
@@ -47,22 +71,10 @@ function Carnes() {
           </button>
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item">
-                <Link className="nav-link active" to="PaginaPrincipal">
-                  Inicio
-                </Link>
-              </li>
+              {/* Links de navegación */}
+              <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
-                <a
-                  className="nav-link dropdown-toggle"
-                  href="#"
-                  id="productosDropdown"
-                  role="button"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
-                  Productos
-                </a>
+                <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
                   <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
                   <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
@@ -73,53 +85,56 @@ function Carnes() {
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
               </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/ofertas">Ofertas</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/contacto">Contacto</Link>
-              </li>
-              <li className="nav-item">
-                <Link className="nav-link" to="/ListUsersPage">Usuarios</Link>
-              </li>
+              <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
             <form className="d-flex me-3" onSubmit={handleSearch}>
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Buscar productos"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
-              <button className="btn btn-warning" type="submit">
-                Buscar
-              </button>
+              <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-
-            {/* Dropdown usuario */}
             <div className="dropdown">
-              <button
-                className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                style={{ backgroundColor: '#F44336', color: 'black' }}
-                type="button"
-                id="userDropdown"
-                data-bs-toggle="dropdown"
-                aria-expanded="false"
-              >
+              <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'black' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
                 <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li>
-                  <button className="dropdown-item text-danger" onClick={handleLogout}>
-                    Cerrar Sesión
-                  </button>
-                </li>
+                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
               </ul>
             </div>
           </div>
         </div>
       </nav>
 
+<<<<<<< HEAD
+      {/* Sección Frutas */}
+      <section className="container py-5">
+        <h2 className="mb-4 text-center">Sección Frutas</h2>
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {productos.map((prod, i) => (
+            <div key={i} className="col">
+              <div className="card h-100 shadow-sm d-flex flex-column">
+                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
+                <div className="card-body d-flex flex-column">
+                  <h5 className="card-title">{prod.nombre}</h5>
+                  <p className="card-text">{prod.desc}</p>
+                  <div className="mb-2">💵 <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                  <div className="d-flex align-items-center mb-2">
+                    <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
+                    <input
+                      id={`cantidad-${i}`}
+                      type="number"
+                      min="1"
+                      value={prod.cantidad}
+                      onChange={(e) => handleCantidadChange(i, e.target.value)}
+                      className="form-control form-control-sm w-50"
+                    />
+                  </div>
+                  <div className="mt-auto d-flex justify-content-between">
+                    <button className="btn btn-warning btn-sm">Agregar</button>
+                  </div>
+                </div>
+              </div>
+=======
       
 <section className="container py-5">
   <h2 className="mb-4 text-center">Sección Carnes</h2>
@@ -284,9 +299,13 @@ function Carnes() {
             <div className="mt-auto d-flex justify-content-between align-items-center">
               <span className="fw-bold">$ {(10 * i).toFixed(2)}</span>
               <button className="btn btn-warning btn-sm">Agregar</button>
+>>>>>>> master
             </div>
           </div>
         </div>
+<<<<<<< HEAD
+      </section>
+=======
       </div>
     ))}
   </div>
@@ -297,6 +316,7 @@ function Carnes() {
       
 
       
+>>>>>>> master
     </>
   );
 }

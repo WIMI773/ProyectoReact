@@ -64,12 +64,11 @@ function PaginaPrincipal() {
                   Productos
                 </a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
-                  <li><Link className="dropdown-item" to="/bebidas">Bebidas</Link></li>
-                  <li><Link className="dropdown-item" to="/panaderia">Panadería</Link></li>
-                  <li><Link className="dropdown-item" to="/hogar">Hogar</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
+                  <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>

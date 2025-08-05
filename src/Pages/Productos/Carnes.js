@@ -105,6 +105,7 @@ function Carnes() {
         </div>
       </nav>
 
+<<<<<<< HEAD
       {/* Sección Frutas */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Frutas</h2>
@@ -133,10 +134,189 @@ function Carnes() {
                   </div>
                 </div>
               </div>
+=======
+      
+<section className="container py-5">
+  <h2 className="mb-4 text-center">Sección Carnes</h2>
+  <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {[
+      {
+        desc: "Manzana",
+        src: "/imagenesProductos/manzana.webp",
+        nombre: "Manzana Roja"
+      },
+      {
+        desc: "Fresa",
+        src: "/imagenesProductos/fresa.png",
+        nombre: "Fresa"
+      },
+      {
+        desc: "Banano",
+        src: "/imagenesProductos/guineo.webp",
+        nombre: "Banano"
+      },
+      {
+        desc: "Durazno",
+        src: "/imagenesProductos/durazno.png",
+        nombre: "Durazno"
+      },
+      {
+        desc: "Sandia",
+        src: "/imagenesProductos/sandia.png",
+        nombre: "Sandia"
+      },
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+      
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+       {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+
+      {
+        desc: "Melon",
+        src: "/imagenesProductos/melones.png",
+        nombre: "Melon"
+      },
+      
+
+
+
+
+      
+    ].map((prod, i) => (
+      <div key={i} className="col">
+        <div className="card h-100 shadow-sm d-flex flex-column">
+          <img
+            src={prod.src}
+            className="card-img-top"
+            alt={prod.nombre}
+            style={{ height: '180px', objectFit: 'contain' }}
+          />
+          <div className="card-body d-flex flex-column">
+            <h5 className="card-title">{prod.nombre}</h5>
+            <p className="card-text">{prod.desc}</p>
+            <div className="mt-auto d-flex justify-content-between align-items-center">
+              <span className="fw-bold">$ {(10 * i).toFixed(2)}</span>
+              <button className="btn btn-warning btn-sm">Agregar</button>
+>>>>>>> master
             </div>
-          ))}
+          </div>
         </div>
+<<<<<<< HEAD
       </section>
+=======
+      </div>
+    ))}
+  </div>
+</section>
+
+
+
+      
+
+      
+>>>>>>> master
     </>
   );
 }

@@ -112,7 +112,7 @@ function Registrar() {
             <div className="d-flex gap-3">
               <div className="form-check">
                 <input className="form-check-input" type="radio" name="sexo" value="Masculino" checked={formData.sexo === 'Masculino'} onChange={handleChange} />
-                <label className="form-check-label" style={{color:'#FFC300		'}}>Masculino</label>
+                <label className="form-check-label">Masculino</label>
               </div>
               <div className="form-check">
                 <input className="form-check-input" type="radio" name="sexo" value="Femenino" checked={formData.sexo === 'Femenino'} onChange={handleChange} />

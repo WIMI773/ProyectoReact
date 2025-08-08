@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { useNavigate, Link } from 'react-router-dom'; // ← Link agregado
+import { useNavigate, Link } from 'react-router-dom'; 
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -48,7 +48,7 @@ function Frutas() {
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item">
-                <Link className="nav-link active" to="PaginaPrincipal">
+                <Link className="nav-link active" to="/PaginaPrincipal">
                   Inicio
                 </Link>
               </li>
@@ -119,10 +119,6 @@ function Frutas() {
           </div>
         </div>
       </nav>
-            </div>
-          ))}
-        </div>
-
     </>
   );
 }

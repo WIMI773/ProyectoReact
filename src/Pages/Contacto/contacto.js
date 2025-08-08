@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 
 function Contacto() {
@@ -10,7 +11,7 @@ function Contacto() {
   });
 
   const handleChange = (e) => {
-    setFormData({...formData, [e.target.id]: e.target.value});
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
   const handleSubmit = (e) => {
@@ -39,7 +40,6 @@ function Contacto() {
       </p>
 
       <form onSubmit={handleSubmit}>
-
         <div className="mb-3">
           <label htmlFor="nombre" className="form-label fw-semibold">Nombre</label>
           <input
@@ -94,27 +94,34 @@ function Contacto() {
 
         <button
           type="submit"
-          className="btn btn-warning w-100 fw-semibold"
+          className="btn btn-warning w-100 fw-semibold mb-3"
           style={{ backgroundColor: '#FFD600', borderColor: '#FFD600' }}
         >
           Enviar
         </button>
+
+        {/* Botón para ir al inicio */}
+        <Link
+          to="/PaginaPrincipal"
+          className="btn btn-secondary w-100 fw-semibold"
+        >
+          Ir al inicio
+        </Link>
       </form>
 
-      {/* Aquí está el mapa */}
+      {/* Mapa */}
       <div className="my-5">
-  <iframe
-    src="https://www.google.com/maps/embed?pb=!3m2!1ses-419!2sco!4v1754408439726!5m2!1ses-419!2sco!6m8!1m7!1s3Vw05HtDyFNqu9Ce4NaF6w!2m2!1d8.23161342769544!2d-73.34933782221967!3f129.91606938420477!4f-1.742002660381445!5f0.4000000000000002"
-    width="100%"
-    height="400"
-    style={{ border: 0 }}
-    allowFullScreen
-    loading="lazy"
-    referrerPolicy="no-referrer-when-downgrade"
-    title="Supermercado La Amistad"
-  />
-</div>
-
+        <iframe
+          src="https://www.google.com/maps/embed?pb=!3m2!1ses-419!2sco!4v1754408439726!5m2!1ses-419!2sco!6m8!1m7!1s3Vw05HtDyFNqu9Ce4NaF6w!2m2!1d8.23161342769544!2d-73.34933782221967!3f129.91606938420477!4f-1.742002660381445!5f0.4000000000000002"
+          width="100%"
+          height="400"
+          style={{ border: 0 }}
+          allowFullScreen
+          loading="lazy"
+          referrerPolicy="no-referrer-when-downgrade"
+          title="Supermercado La Amistad"
+        />
+      </div>
 
       <hr className="my-5" />
 

@@ -18,6 +18,7 @@ import Verduras from './Pages/Productos/Verduras';
 import Medicamentos from './Pages/Productos/Medicamentos';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
+import Ofertas from './Pages/ofertas/ofertas.js';
 
 
 function App() {
@@ -29,6 +30,7 @@ function App() {
         <Route path="/Recuperar" element={<Recuperar />} />
         <Route path="/Registrar" element={<Registrar />} />
         <Route path="/ResetPassword" element={<ResetPassword />} />
+        <Route path="/ofertas" element={<Ofertas/>} />
         <Route path="/Frutas" element={<Frutas />} />
         <Route path="/Aseo" element={<Aseo />} />
         <Route path="/Carnes" element={<Carnes />} />

@@ -81,6 +81,8 @@ function Carnes() {
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
+                                    <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
@@ -107,7 +109,7 @@ function Carnes() {
 
       {/* Sección Frutas */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Sección Frutas</h2>
+        <h2 className="mb-4 text-center">Sección Carnes</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {productos.map((prod, i) => (
             <div key={i} className="col">

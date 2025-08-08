@@ -4,24 +4,35 @@ import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
-function Medicamentos() {
+function Verduras() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
   const [productos, setProductos] = useState([
-    { nombre: "Metocarbamol/Ibuprofeno", desc: "Metocarbamol/Ibuprofeno 500/200 mg", src: "/imagenesProductos/metocarbamol.png", precio: 40400, cantidad: 1 },
-    { nombre: "Acetaminofen Jarabe", desc: "Acetaminofen Jarabe 90 ml", src: "/imagenesProductos/acetaminofen jarabe.webp", precio: 7400, cantidad: 1 },
-    { nombre: "Vita C", desc: "Vita C 500 mg", src: "/imagenesProductos/Vita c.png", precio: 51200, cantidad: 1 },
-    { nombre: "Omeprazol", desc: "Omeprazol 20 mg", src: "/imagenesProductos/omeprazol.png", precio: 23000, cantidad: 1 },
-    { nombre: "Quetiapina", desc: "Quetiapina 100 mg", src: "/imagenesProductos/quetiapina.png", precio: 15200, cantidad: 1 },
-    { nombre: "Aspirina", desc: "Aspirina 100 mg", src: "/imagenesProductos/aspirina.avif", precio: 19900, cantidad: 1 },
-    { nombre: "Amoxicilina", desc: "Amoxicilina 500 mg", src: "/imagenesProductos/amoxicilina_500.png", precio: 31500, cantidad: 1 },
-    { nombre: "Naproxeno", desc: "Naproxeno 500 mg", src: "/imagenesProductos/naproxeno.jpg", precio: 12450, cantidad: 1 },
-    { nombre: "Cetirizina", desc: "Cetirizina 10 mg", src: "/imagenesProductos/cetirizina.png", precio: 7550, cantidad: 1 },
-    { nombre: "Buscapina", desc: "Buscapina 10 mg", src: "/imagenesProductos/buscapina.webp", precio: 32900, cantidad: 1 },
-    { nombre: "Loperamida", desc: "Loperamida 2 mg", src: "/imagenesProductos/loperamida.webp", precio: 10900, cantidad: 1 },
-    { nombre: "Acetaminofen Forte", desc: "Acetaminofen Forte 500 mg", src: "/imagenesProductos/acetaminofen forte.png", precio: 10300, cantidad: 1 },
-    
+    { nombre: "Banano", desc: "Banano", src: "/imagenesProductos/banano.png", precio: 1000, cantidad: 1 },
+    { nombre: "Fresa", desc: "Fresa", src: "/imagenesProductos/fresa.png", precio: 2500, cantidad: 1 },
+    { nombre: "Sandia", desc: "Sandia", src: "/imagenesProductos/sandia.png", precio: 5000, cantidad: 1 },
+    { nombre: "Durazno", desc: "Durazno", src: "/imagenesProductos/durazno.png", precio: 3000, cantidad: 1 },
+    { nombre: "Melon", desc: "Melon", src: "/imagenesProductos/melones.png", precio: 4000, cantidad: 1 },
+    { nombre: "Uva", desc: "Uva", src: "/imagenesProductos/uva.png", precio: 3500, cantidad: 1 },
+    { nombre: "Pera", desc: "Pera", src: "/imagenesProductos/pera.webp", precio: 2800, cantidad: 1 },
+    { nombre: "Limon", desc: "Limon", src: "/imagenesProductos/limon.png", precio: 1500, cantidad: 1 },
+    { nombre: "Mango", desc: "Mango", src: "/imagenesProductos/maracaton.webp", precio: 3200, cantidad: 1 },
+    { nombre: "Coco", desc: "Coco", src: "/imagenesProductos/coco.webp", precio: 3700, cantidad: 1 },
+    { nombre: "Piña", desc: "Piña", src: "/imagenesProductos/piña.webp", precio: 2900, cantidad: 1 },
+    { nombre: "Naranja", desc: "Naranja", src: "/imagenesProductos/naranja.webp", precio: 2600, cantidad: 1 },
+    { nombre: "Papaya", desc: "Papaya", src: "/imagenesProductos/papaya.png", precio: 3000, cantidad: 1 },
+    { nombre: "Cereza", desc: "Cereza", src: "/imagenesProductos/cereza.webp", precio: 4500, cantidad: 1 },
+    { nombre: "Aguacate", desc: "Aguacate", src: "/imagenesProductos/aguacate.webp", precio: 3800, cantidad: 1 },
+    { nombre: "Maracuya", desc: "Maracuya", src: "/imagenesProductos/maracuyaa.png", precio: 3300, cantidad: 1 },
+    { nombre: "Zapote", desc: "Zapote", src: "/imagenesProductos/sapote.png", precio: 3100, cantidad: 1 },
+    { nombre: "Kiwi", desc: "Kiwi", src: "/imagenesProductos/kiwi.png", precio: 4700, cantidad: 1 },
+    { nombre: "Granadilla", desc: "Granadilla", src: "/imagenesProductos/granadilla.webp", precio: 3600, cantidad: 1 },
+    { nombre: "Ciruela", desc: "Ciruela", src: "/imagenesProductos/ciruela.png", precio: 3400, cantidad: 1 },
+    { nombre: "Gananbana", desc: "Gananbana", src: "/imagenesProductos/ganabana.jpg", precio: 3000, cantidad: 1 },
+    { nombre: "Nispero", desc: "Nispero", src: "/imagenesProductos/nispero.png", precio: 2000, cantidad: 1 },
+    { nombre: "Manzana", desc: "Manzana", src: "/imagenesProductos/manzana.webp", precio: 3200, cantidad: 1 },
+    { nombre: "Tamarindo", desc: "Tamarindo", src: "/imagenesProductos/tamarindo.png", precio: 3000, cantidad: 1 },
   ]);
 
   const handleSearch = (e) => {
@@ -105,9 +116,9 @@ function Medicamentos() {
         </div>
       </nav>
 
-      {/* Sección Medicamentos */}
+      {/* Sección Frutas */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Sección Medicamentos</h2>
+        <h2 className="mb-4 text-center">Sección Verduras</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {productos.map((prod, i) => (
             <div key={i} className="col">
@@ -116,7 +127,7 @@ function Medicamentos() {
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{prod.nombre}</h5>
                   <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2">💵 <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                  <div className="mb-2"> <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                   <div className="d-flex align-items-center mb-2">
                     <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
                     <input
@@ -141,4 +152,4 @@ function Medicamentos() {
   );
 }
 
-export default Medicamentos;
+export default Verduras;

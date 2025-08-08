@@ -69,6 +69,8 @@ function Lacteos() {
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
+                                    <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
@@ -124,7 +126,7 @@ function Lacteos() {
 
       {/* Destacados */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Seccion Frutas</h2>
+        <h2 className="mb-4 text-center">Seccion Lacteos</h2>
         <div className="row">
           {[{desc:"Ron viejo de caldas 1000ml",src:"/imagenesProductos/ron.png", nombre:"Ron caldas"},
             {desc:"",src:"/imagenesProductos/antioqueño.png"}].map((prod, i) => (

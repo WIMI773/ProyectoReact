@@ -14,6 +14,7 @@ import Carnes from './Pages/Productos/Carnes';
 import Lacteos from './Pages/Productos/Lacteos';
 import Aseo from './Pages/Productos/Aseo';
 import Alcohol from './Pages/Productos/Alcohol';
+import Verduras from './Pages/Productos/Verduras';
 import Medicamentos from './Pages/Productos/Medicamentos';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
@@ -33,6 +34,10 @@ function App() {
         <Route path="/Carnes" element={<Carnes />} />
         <Route path="/Lacteos" element={<Lacteos />} />
         <Route path="/Alcohol" element={<Alcohol />}/> 
+                <Route path="/Verduras" element={<Verduras />}/> 
+
+                <Route path="/Verduras" element={<Verduras />}/> 
+
                 <Route path="/contacto" element={<Contacto />}/> 
         
         

@@ -59,7 +59,7 @@ function PaginaPrincipal() {
       src: "/imagenesProductos/aguila.png",
       precio: 1800
     },
-    
+
     {
       nombre: "Leche Entera Alpina",
       desc: "Leche en bolsa 1 litro",
@@ -93,6 +93,10 @@ function PaginaPrincipal() {
                   <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
+                  <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
+
+
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>

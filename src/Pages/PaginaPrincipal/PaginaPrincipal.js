@@ -35,43 +35,12 @@ function PaginaPrincipal() {
   };
 
   const productos = [
-    {
-      nombre: "Ron Caldas",
-      desc: "Ron viejo de caldas 1000ml",
-      src: "/imagenesProductos/ron.png",
-      precio: 70000
-    },
-    {
-      nombre: "Aguardiente Antioqueño",
-      desc: "Aguardiente Antioqueño 375ml",
-      src: "/imagenesProductos/antioqueño.png",
-      precio: 40000
-    },
-    {
-      nombre: "Cerveza Poker",
-      desc: "Cerveza Poker lata 330ml",
-      src: "/imagenesProductos/poker.png",
-      precio: 3500
-    },
-    {
-      nombre: "Cerveza Aguila",
-      desc: "Cerveza Aguila botella 330ml",
-      src: "/imagenesProductos/aguila.png",
-      precio: 1800
-    },
-
-    {
-      nombre: "Leche Entera Alpina",
-      desc: "Leche en bolsa 1 litro",
-      src: "/imagenesProductos/alpina.png",
-      precio: 8000
-    },
-    {
-      nombre: "Arroz Diana",
-      desc: "Bolsa de arroz 5 kilos",
-      src: "/imagenesProductos/arroz.png",
-      precio: 15000
-    }
+    { nombre: "Ron Caldas", desc: "Ron viejo de caldas 1000ml", src: "/imagenesProductos/ron.png", precio: 70000 },
+    { nombre: "Aguardiente Antioqueño", desc: "Aguardiente Antioqueño 375ml", src: "/imagenesProductos/antioqueño.png", precio: 40000 },
+    { nombre: "Cerveza Poker", desc: "Cerveza Poker lata 330ml", src: "/imagenesProductos/poker.png", precio: 3500 },
+    { nombre: "Cerveza Aguila", desc: "Cerveza Aguila botella 330ml", src: "/imagenesProductos/aguila.png", precio: 1800 },
+    { nombre: "Leche Entera Alpina", desc: "Leche en bolsa 1 litro", src: "/imagenesProductos/alpina.png", precio: 8000 },
+    { nombre: "Arroz Diana", desc: "Bolsa de arroz 5 kilos", src: "/imagenesProductos/arroz.png", precio: 15000 }
   ];
 
   return (
@@ -95,8 +64,6 @@ function PaginaPrincipal() {
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
-
-
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
@@ -136,21 +103,12 @@ function PaginaPrincipal() {
       </nav>
 
       {/* Sección de bienvenida */}
-      <header
-        className="text-center py-5"
-        style={{ backgroundColor: '#f8f9fa' }}
-      >
+      <header className="text-center py-5" style={{ backgroundColor: '#f8f9fa' }}>
         <div className="container">
-          <h1
-            className="fw-bold mb-3"
-            style={{ fontSize: '2.5rem', color: '#212529' }}
-          >
+          <h1 className="fw-bold mb-3" style={{ fontSize: '2.5rem', color: '#212529' }}>
             Bienvenido a <span style={{ color: '#FFD600' }}>LaAmistad</span>
           </h1>
-          <p
-            className="mb-4"
-            style={{ fontSize: '1.2rem', color: '#000000ff' }}
-          >
+          <p className="mb-4" style={{ fontSize: '1.2rem', color: '#000000ff' }}>
             Calidad y confianza en cada compra para ti y tu familia.
           </p>
           <button
@@ -176,7 +134,6 @@ function PaginaPrincipal() {
       {/* Carrusel de productos */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Productos Destacados</h2>
-
         <div id="carouselProductos" className="carousel slide" data-bs-ride="carousel">
           <div className="carousel-inner">
             {Array.from({ length: Math.ceil(productos.length / 4) }, (_, i) => (
@@ -185,12 +142,7 @@ function PaginaPrincipal() {
                   {productos.slice(i * 4, i * 4 + 4).map((prod, index) => (
                     <div className="col-md-3 mb-3" key={index}>
                       <div className="card h-100">
-                        <img
-                          src={prod.src}
-                          className="card-img-top"
-                          alt={prod.nombre}
-                          style={{ height: '200px', objectFit: 'contain' }}
-                        />
+                        <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '200px', objectFit: 'contain' }} />
                         <div className="card-body d-flex flex-column">
                           <h5 className="card-title">{prod.nombre}</h5>
                           <p className="card-text">{prod.desc}</p>
@@ -206,54 +158,25 @@ function PaginaPrincipal() {
           </div>
 
           {/* Flechas amarillas personalizadas */}
-          <button
-            className="carousel-control-prev"
-            type="button"
-            data-bs-target="#carouselProductos"
-            data-bs-slide="prev"
-            style={{ width: '5%' }}
-          >
-            <span
-              style={{
-                color: '#FFD600',
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                lineHeight: '1',
-              }}
-              aria-hidden="true"
-            >
-              ❮
-            </span>
+          <button className="carousel-control-prev" type="button" data-bs-target="#carouselProductos" data-bs-slide="prev" style={{ width: '5%' }}>
+            <span style={{ color: '#FFD600', fontSize: '3rem', fontWeight: 'bold', lineHeight: '1' }} aria-hidden="true">❮</span>
             <span className="visually-hidden">Anterior</span>
           </button>
-          <button
-            className="carousel-control-next"
-            type="button"
-            data-bs-target="#carouselProductos"
-            data-bs-slide="next"
-            style={{ width: '5%' }}
-          >
-            <span
-              style={{
-                color: '#FFD600',
-                fontSize: '3rem',
-                fontWeight: 'bold',
-                lineHeight: '1',
-              }}
-              aria-hidden="true"
-            >
-              ❯
-            </span>
+          <button className="carousel-control-next" type="button" data-bs-target="#carouselProductos" data-bs-slide="next" style={{ width: '5%' }}>
+            <span style={{ color: '#FFD600', fontSize: '3rem', fontWeight: 'bold', lineHeight: '1' }} aria-hidden="true">❯</span>
             <span className="visually-hidden">Siguiente</span>
           </button>
         </div>
       </section>
 
+      {/* Ofertas de la semana */}
       <section className="bg-warning py-5 text-center">
         <div className="container">
           <h2>Ofertas de la Semana</h2>
           <p className="lead">Ahorra hasta un 30% en productos seleccionados.</p>
-          <button className="btn btn-danger">Ver Ofertas</button>
+          <div className="nav-item">
+            <Link to="/ofertas" className="btn btn-danger">Ver Ofertas</Link>
+          </div>
         </div>
       </section>
 

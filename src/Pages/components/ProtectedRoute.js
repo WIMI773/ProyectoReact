@@ -1,7 +1,6 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 import { useAuthState } from 'react-firebase-hooks/auth';
 import { auth } from '../../Firebase';
-import Spinner from './spinner';
 import { useEffect, useState } from 'react';
 import Swal from 'sweetalert2';
 
@@ -32,7 +31,7 @@ function ProtectedRoute({ children }) {
   }, [loading, fakeLoading, user, navigate]);
 
   if (loading || fakeLoading) {
-    return <Spinner />;
+    
   }
 
   if (!user) {

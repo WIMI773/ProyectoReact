@@ -19,43 +19,38 @@ import Medicamentos from './Pages/Productos/Medicamentos';
 import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
 import Ofertas from './Pages/ofertas/ofertas.js';
-
+import { CarritoProvider } from './Pages/components/CarritoContext.js';
 
 function App() {
   return (
     <BrowserRouter>
-      <Routes>
-        {/*Rutas Publicas*/}
-        <Route path="/" element={<LoginPage />} />
-        <Route path="/Recuperar" element={<Recuperar />} />
-        <Route path="/Registrar" element={<Registrar />} />
-        <Route path="/ResetPassword" element={<ResetPassword />} />
-        <Route path="/ofertas" element={<Ofertas/>} />
-        <Route path="/Frutas" element={<Frutas />} />
-        <Route path="/Aseo" element={<Aseo />} />
-        <Route path="/Carnes" element={<Carnes />} />
-        <Route path="/Lacteos" element={<Lacteos />} />
-        <Route path="/Alcohol" element={<Alcohol />}/> 
-                <Route path="/Verduras" element={<Verduras />}/> 
+      <CarritoProvider> {/* ← AQUÍ está el CarritoProvider envolviendo todas las rutas */}
+        <Routes>
+          {/*Rutas Publicas*/}
+          <Route path="/" element={<LoginPage />} />
+          <Route path="/Recuperar" element={<Recuperar />} />
+          <Route path="/Registrar" element={<Registrar />} />
+          <Route path="/ResetPassword" element={<ResetPassword />} />
+          <Route path="/ofertas" element={<Ofertas/>} />
+          <Route path="/Frutas" element={<Frutas />} />
+          <Route path="/Aseo" element={<Aseo />} />
+          <Route path="/Carnes" element={<Carnes />} />
+          <Route path="/Lacteos" element={<Lacteos />} />
+          <Route path="/Alcohol" element={<Alcohol />}/> 
+          <Route path="/Verduras" element={<Verduras />}/> 
+          <Route path="/contacto" element={<Contacto />}/> 
+          <Route path="/Medicamentos" element={<Medicamentos />}/> 
 
-                <Route path="/Verduras" element={<Verduras />}/> 
+          {/*Rutas Privadas*/}
+          <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
+          <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
 
-                <Route path="/contacto" element={<Contacto />}/> 
-        
-        
-                <Route path="/Medicamentos" element={<Medicamentos />}/> 
-
-                <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
-
-
-        {/*Rutas Privadas*/}
-        <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
-
-        {/*Rutas no encontradas*/}
-        <Route path="*" element={<NotFoundPage />} />
-        <Route path="/UseStateExample" element={<UseStateExample />} />
-        <Route path="/UseEffectExample" element={<UseEffectExample />} />
-      </Routes>
+          {/*Rutas no encontradas*/}
+          <Route path="*" element={<NotFoundPage />} />
+          <Route path="/UseStateExample" element={<UseStateExample />} />
+          <Route path="/UseEffectExample" element={<UseEffectExample />} />
+        </Routes>
+      </CarritoProvider>
     </BrowserRouter>
   );
 }

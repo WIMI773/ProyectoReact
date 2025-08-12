@@ -3,10 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useCarrito } from '../components/CarritoContext';
 
 function Medicamentos() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  // Usar el contexto del carrito
+  const { 
+    carrito, 
+    mostrarCarrito, 
+    setMostrarCarrito, 
+    agregarAlCarrito, 
+    eliminarDelCarrito, 
+    totalCarrito 
+  } = useCarrito();
 
   const [productos, setProductos] = useState([
     { nombre: "Metocarbamol/Ibuprofeno", desc: "Metocarbamol/Ibuprofeno 500/200 mg", src: "/imagenesProductos/metocarbamol.png", precio: 40400, cantidad: 1 },
@@ -21,7 +32,6 @@ function Medicamentos() {
     { nombre: "Buscapina", desc: "Buscapina 10 mg", src: "/imagenesProductos/buscapina.webp", precio: 32900, cantidad: 1 },
     { nombre: "Loperamida", desc: "Loperamida 2 mg", src: "/imagenesProductos/loperamida.webp", precio: 10900, cantidad: 1 },
     { nombre: "Acetaminofen Forte", desc: "Acetaminofen Forte 500 mg", src: "/imagenesProductos/acetaminofen forte.png", precio: 10300, cantidad: 1 },
-    
   ]);
 
   const handleSearch = (e) => {
@@ -58,18 +68,15 @@ function Medicamentos() {
 
   return (
     <>
-      {/* Navbar (sin cambios) */}
+      {/* Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
-          <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">
-            LaAmistad
-          </Link>
+          <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">LaAmistad</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* Links de navegación */}
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
@@ -79,7 +86,7 @@ function Medicamentos() {
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
-                                    <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
@@ -116,7 +123,7 @@ function Medicamentos() {
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{prod.nombre}</h5>
                   <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2">💵 <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                  <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                   <div className="d-flex align-items-center mb-2">
                     <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
                     <input
@@ -129,7 +136,7 @@ function Medicamentos() {
                     />
                   </div>
                   <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm">Agregar</button>
+                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                   </div>
                 </div>
               </div>
@@ -137,6 +144,58 @@ function Medicamentos() {
           ))}
         </div>
       </section>
+
+      {/* Botón flotante del carrito */}
+      <button
+        className="btn btn-dark rounded-circle shadow-lg position-fixed"
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+      >
+        🛒
+        {carrito.length > 0 && (
+          <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
+            {carrito.length}
+          </span>
+        )}
+      </button>
+
+      {/* Carrito flotante */}
+      {mostrarCarrito && (
+        <div
+          className="position-fixed bg-light border p-3 shadow-lg"
+          style={{
+            bottom: '90px',
+            right: '20px',
+            width: '300px',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            borderRadius: '10px',
+            zIndex: 1000
+          }}
+        >
+          <h5 className="text-center">Carrito De Compras</h5>
+          {carrito.length === 0 ? (
+            <p className="text-center">Carrito vacío</p>
+          ) : (
+            <>
+              {carrito.map((item, index) => (
+                <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                  <div>
+                    <strong>{item.nombre}</strong>
+                    <br />
+                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  </div>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                </div>
+              ))}
+              <div className="mt-3">
+                <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
+                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFD600', color:'black'}}>Pagar</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

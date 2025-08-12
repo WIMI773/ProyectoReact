@@ -3,10 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useCarrito } from '../components/CarritoContext';
 
 function Carnes() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  // Usar el contexto del carrito
+  const { 
+    carrito, 
+    mostrarCarrito, 
+    setMostrarCarrito, 
+    agregarAlCarrito, 
+    eliminarDelCarrito, 
+    totalCarrito 
+  } = useCarrito();
 
   const [productos, setProductos] = useState([
     { nombre: "Lomo de Cerdo", desc: "Lomo de Cerdo", src: "/imagenesProductos/lomo.webp", precio: 1000, cantidad: 1 },
@@ -15,15 +26,13 @@ function Carnes() {
     { nombre: "Carne de Res", desc: "Carne de Res", src: "/imagenesProductos/carne.png", precio: 3000, cantidad: 1 },
     { nombre: "Costilla de Cerdo", desc: "Costilla de Cerdo", src: "/imagenesProductos/costilla cerdo.png", precio: 4000, cantidad: 1 },
     { nombre: "Pollo", desc: "Pollo", src: "/imagenesProductos/pollo.png", precio: 3500, cantidad: 1 },
-    { nombre: "Chuleta de Cerdo", desc: "Chuleta de Cerdo", src: "/imagenesProductos/chuleta.png", precio: 2800, cantidad: 1 },
     { nombre: "Pescado", desc: "Pescado", src: "/imagenesProductos/pescado.png", precio: 1500, cantidad: 1 },
     { nombre: "Jamon de Cerdo", desc: "Jamon de Cerdo", src: "/imagenesProductos/jamon.png", precio: 3200, cantidad: 1 },
     { nombre: "Salchicha Ranchera", desc: "Salchicha Ranchera", src: "/imagenesProductos/chorizo.png", precio: 3700, cantidad: 1 },
-    { nombre: "Carne Molida", desc: "CArne Molida", src: "/imagenesProductos/carnemolida.png", precio: 2900, cantidad: 1 },
+    { nombre: "Carne Molida", desc: "Carne Molida", src: "/imagenesProductos/carnemolida.png", precio: 2900, cantidad: 1 },
     { nombre: "Salchichon Cervecero", desc: "Salchichon Cervecero", src: "/imagenesProductos/salchichon.png", precio: 2600, cantidad: 1 },
     { nombre: "Costilla de Res", desc: "Costilla de Res", src: "/imagenesProductos/costillares.png", precio: 3000, cantidad: 1 },
     { nombre: "Chorizo de Pavo", desc: "Chorizo de Pavo", src: "/imagenesProductos/chorizopavo.png", precio: 4500, cantidad: 1 },
-    
   ]);
 
   const handleSearch = (e) => {
@@ -60,18 +69,15 @@ function Carnes() {
 
   return (
     <>
-      {/* Navbar (sin cambios) */}
+      {/* Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
-          <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">
-            LaAmistad
-          </Link>
+          <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">LaAmistad</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span className="navbar-toggler-icon" />
           </button>
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              {/* Links de navegación */}
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
@@ -81,7 +87,7 @@ function Carnes() {
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
-                                    <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
@@ -107,7 +113,7 @@ function Carnes() {
         </div>
       </nav>
 
-      {/* Sección Frutas */}
+      {/* Sección Carnes */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Carnes</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -118,7 +124,7 @@ function Carnes() {
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{prod.nombre}</h5>
                   <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2">💵 <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                  <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                   <div className="d-flex align-items-center mb-2">
                     <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
                     <input
@@ -131,7 +137,7 @@ function Carnes() {
                     />
                   </div>
                   <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm">Agregar</button>
+                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                   </div>
                 </div>
               </div>
@@ -139,6 +145,58 @@ function Carnes() {
           ))}
         </div>
       </section>
+
+      {/* Botón flotante del carrito */}
+      <button
+        className="btn btn-dark rounded-circle shadow-lg position-fixed"
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+      >
+        🛒
+        {carrito.length > 0 && (
+          <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
+            {carrito.length}
+          </span>
+        )}
+      </button>
+
+      {/* Carrito flotante */}
+      {mostrarCarrito && (
+        <div
+          className="position-fixed bg-light border p-3 shadow-lg"
+          style={{
+            bottom: '90px',
+            right: '20px',
+            width: '300px',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            borderRadius: '10px',
+            zIndex: 1000
+          }}
+        >
+          <h5 className="text-center"> Carrito De Compras</h5>
+          {carrito.length === 0 ? (
+            <p className="text-center">Carrito vacío</p>
+          ) : (
+            <>
+              {carrito.map((item, index) => (
+                <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                  <div>
+                    <strong>{item.nombre}</strong>
+                    <br />
+                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  </div>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                </div>
+              ))}
+              <div className="mt-3">
+                <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
+                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFd600', color:'black'}}>Pagar</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

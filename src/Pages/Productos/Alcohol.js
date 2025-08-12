@@ -3,10 +3,21 @@ import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
+import { useCarrito } from '../components/CarritoContext';
 
 function Alcohol() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
+
+  // Usar el contexto del carrito en lugar del estado local
+  const { 
+    carrito, 
+    mostrarCarrito, 
+    setMostrarCarrito, 
+    agregarAlCarrito, 
+    eliminarDelCarrito, 
+    totalCarrito 
+  } = useCarrito();
 
   const [productos, setProductos] = useState([
     { nombre: "Ron Caldas", desc: "Ron Caldas", src: "/imagenesProductos/ron caldas.png", precio: 110000, cantidad: 1 },
@@ -68,7 +79,7 @@ function Alcohol() {
 
   return (
     <>
-      {/* Navbar (sin cambios) */}
+      {/* Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
           <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">
@@ -89,9 +100,8 @@ function Alcohol() {
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
-                                    <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
+                  <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
-
                   <li><hr className="dropdown-divider" /></li>
                   <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
@@ -116,7 +126,7 @@ function Alcohol() {
         </div>
       </nav>
 
-      {/* Sección Frutas */}
+      {/* Sección Alcohol */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Alcohol</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -140,7 +150,7 @@ function Alcohol() {
                     />
                   </div>
                   <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm">Agregar</button>
+                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                   </div>
                 </div>
               </div>
@@ -148,6 +158,58 @@ function Alcohol() {
           ))}
         </div>
       </section>
+
+      {/* Botón flotante del carrito */}
+      <button
+        className="btn btn-dark rounded-circle shadow-lg position-fixed"
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+      >
+        🛒
+        {carrito.length > 0 && (
+          <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
+            {carrito.length}
+          </span>
+        )}
+      </button>
+
+      {/* Carrito flotante */}
+      {mostrarCarrito && (
+        <div
+          className="position-fixed bg-light border p-3 shadow-lg"
+          style={{
+            bottom: '90px',
+            right: '20px',
+            width: '300px',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            borderRadius: '10px',
+            zIndex: 1000
+          }}
+        >
+          <h5 className="text-center"> Carrito De Compras</h5>
+          {carrito.length === 0 ? (
+            <p className="text-center">Carrito vacío</p>
+          ) : (
+            <>
+              {carrito.map((item, index) => (
+                <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                  <div>
+                    <strong>{item.nombre}</strong>
+                    <br />
+                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  </div>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                </div>
+              ))}
+              <div className="mt-3">
+                <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
+                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFd600', color:'black'}}>Pagar</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
     </>
   );
 }

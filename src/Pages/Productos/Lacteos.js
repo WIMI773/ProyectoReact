@@ -19,27 +19,28 @@ function Lacteos() {
   } = useCarrito();
 
   const [productos, setProductos] = useState([
-    { nombre: "6 pax yox", desc: "6 pax yox", src: "/imagenesProductos/Yogurt-yox.jpg", precio: 20230, cantidad: 1 },
-    { nombre: "yogo-yogo fresa", desc: "yogo-yogo fresa", src: "/imagenesProductos/Yogo-yogo-fresa.jpg", precio: 3200, cantidad: 1 },
-    { nombre: "salchichon", desc: "salchichon", src: "/imagenesProductos/salchichon.jpg", precio: 22850, cantidad: 1 },
-    { nombre: "salchicharanchera", desc: "salchicharanchera", src: "/imagenesProductos/salchicharanchera.jpg", precio: 27500, cantidad: 1 },
-    { nombre: "salchicha", desc: "salchicha", src: "/imagenesProductos/sachicha.jpg", precio: 18580, cantidad: 1 },
-    { nombre: "queso crema", desc: "queso crema", src: "/imagenesProductos/queso-crema.jpg", precio: 6040, cantidad: 1 },
-    { nombre: "queso", desc: "queso", src: "/imagenesProductos/queso colanta.jpg", precio: 17300, cantidad: 1 },
-    { nombre: "quesito", desc: "quesito", src: "/imagenesProductos/quesito.png", precio: 11990, cantidad: 1 },
-    { nombre: "mozzarella", desc: "mozzarella", src: "/imagenesProductos/mozzarella.jpg", precio: 11250, cantidad: 1 },
-    { nombre: "Milo", desc: "Milo", src: "/imagenesProductos/milo.jpg", precio: 37590, cantidad: 1 },
-    { nombre: "mantequilla sin sal", desc: "mantequilla sin sal", src: "/imagenesProductos/mantequillasinsal.jpg", precio: 13990, cantidad: 1 },
-    { nombre: "lecherita", desc: "lecherita", src: "/imagenesProductos/lecherita.jpg", precio: 3350, cantidad: 1 },
-    { nombre: "leche klim", desc: "leche klim", src: "/imagenesProductos/leche-klim.jpg", precio: 43350, cantidad: 1 },
-    { nombre: "leche", desc: "leche", src: "/imagenesProductos/leche.png", precio: 5500, cantidad: 1 },
-    { nombre: "huevos", desc: "huevos", src: "/imagenesProductos/huevos.jpg", precio: 20000, cantidad: 1 },
-    { nombre: "kumis", desc: "kumis", src: "/imagenesProductos/kumis.webp", precio: 9010, cantidad: 1 },
-    { nombre: "mantequilla", desc: "mantequilla", src: "/imagenesProductos/mantequillaconsal.jpg", precio: 16700, cantidad: 1 },
-    { nombre: "ensure", desc: "ensure", src: "/imagenesProductos/ensure.jpg", precio: 79000, cantidad: 1 },
-    { nombre: "crema de leche", desc: "crema de leche", src: "/imagenesProductos/crema de leche.jpg", precio: 5100, cantidad: 1 },
-    { nombre: "bon yurt zucaritas", desc: "bon yurt zucaritas", src: "/imagenesProductos/bon-yurt-zucaritas.jpg", precio: 16650, cantidad: 1 },
+    { nombre: "6 pax yox", desc: "6 unidades de Yogurt Yox", src: "/imagenesProductos/Yogurt-yox.jpg", precio: 20230, cantidad: 1 },
+    { nombre: "Yogo-yogo fresa", desc: "Yogo-yogo sabor fresa", src: "/imagenesProductos/Yogo-yogo-fresa.jpg", precio: 3200, cantidad: 1 },
+    { nombre: "Queso crema", desc: "Queso crema Colanta", src: "/imagenesProductos/queso-crema.jpg", precio: 6040, cantidad: 1 },
+    { nombre: "Queso Colanta", desc: "Queso fresco Colanta", src: "/imagenesProductos/queso-colanta.jpg", precio: 17300, cantidad: 1 },
+    { nombre: "Quesito", desc: "Quesito campesino", src: "/imagenesProductos/quesito.png", precio: 11990, cantidad: 1 },
+    { nombre: "Mozzarella", desc: "Queso mozzarella", src: "/imagenesProductos/mozzarella.jpg", precio: 11250, cantidad: 1 },
+    { nombre: "Milo", desc: "Bebida achocolatada Milo", src: "/imagenesProductos/milo.jpg", precio: 37590, cantidad: 1 },
+    { nombre: "Mantequilla sin sal", desc: "Mantequilla sin sal Colanta", src: "/imagenesProductos/mantequillasinsal.jpg", precio: 13990, cantidad: 1 },
+    { nombre: "Mantequilla", desc: "Mantequilla con sal", src: "/imagenesProductos/mantequillaconsal.jpg", precio: 16700, cantidad: 1 },
+    { nombre: "Lecherita", desc: "Leche condensada", src: "/imagenesProductos/lecherita.jpg", precio: 3350, cantidad: 1 },
+    { nombre: "Leche Klim", desc: "Leche en polvo Klim", src: "/imagenesProductos/leche-klim.jpg", precio: 43350, cantidad: 1 },
+    { nombre: "Leche", desc: "Leche entera", src: "/imagenesProductos/leche.png", precio: 5500, cantidad: 1 },
+    { nombre: "Huevos", desc: "Cubeta de huevos x30", src: "/imagenesProductos/huevos.jpg", precio: 20000, cantidad: 1 },
+    { nombre: "Kumis", desc: "Kumis natural", src: "/imagenesProductos/kumis.webp", precio: 9010, cantidad: 1 },
+    { nombre: "Ensure", desc: "Ensure nutricional", src: "/imagenesProductos/ensure.jpg", precio: 79000, cantidad: 1 },
+    { nombre: "Crema de leche", desc: "Crema de leche Colanta", src: "/imagenesProductos/crema-de-leche.jpg", precio: 5100, cantidad: 1 },
+    { nombre: "Bon Yurt Zucaritas", desc: "Yogurt con zucaritas", src: "/imagenesProductos/bon-yurt-zucaritas.jpg", precio: 16650, cantidad: 1 },
   ]);
+
+  const productosFiltrados = productos.filter((prod) =>
+    prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -69,7 +70,7 @@ function Lacteos() {
 
   const handleCantidadChange = (index, nuevaCantidad) => {
     const productosActualizados = [...productos];
-    productosActualizados[index].cantidad = parseInt(nuevaCantidad);
+    productosActualizados[index].cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     setProductos(productosActualizados);
   };
 
@@ -123,39 +124,43 @@ function Lacteos() {
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Lácteos</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {productos.map((prod, i) => (
-            <div key={i} className="col">
-              <div className="card h-100 shadow-sm d-flex flex-column">
-                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{prod.nombre}</h5>
-                  <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
-                  <div className="d-flex align-items-center mb-2">
-                    <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                    <input
-                      id={`cantidad-${i}`}
-                      type="number"
-                      min="1"
-                      value={prod.cantidad}
-                      onChange={(e) => handleCantidadChange(i, e.target.value)}
-                      className="form-control form-control-sm w-50"
-                    />
-                  </div>
-                  <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+          {productosFiltrados.length > 0 ? (
+            productosFiltrados.map((prod, i) => (
+              <div key={i} className="col">
+                <div className="card h-100 shadow-sm d-flex flex-column">
+                  <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{prod.nombre}</h5>
+                    <p className="card-text">{prod.desc}</p>
+                    <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                    <div className="d-flex align-items-center mb-2">
+                      <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
+                      <input
+                        id={`cantidad-${i}`}
+                        type="number"
+                        min="1"
+                        value={prod.cantidad}
+                        onChange={(e) => handleCantidadChange(i, e.target.value)}
+                        className="form-control form-control-sm w-50"
+                      />
+                    </div>
+                    <div className="mt-auto d-flex justify-content-between">
+                      <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center">No se encontraron productos</p>
+          )}
         </div>
       </section>
 
       {/* Botón flotante del carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
-        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
         onClick={() => setMostrarCarrito(!mostrarCarrito)}
       >
         🛒
@@ -192,12 +197,12 @@ function Lacteos() {
                     <br />
                     {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
                   </div>
-                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                  <button className="btn btn-sm" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFd600', color:'black'}}>Pagar</button>
+                <button className="btn w-100" style={{ backgroundColor: '#FFD600', color: 'black' }}>Pagar</button>
               </div>
             </>
           )}

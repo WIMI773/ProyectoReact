@@ -24,7 +24,7 @@ function Alcohol() {
     { nombre: "Aguardiente", desc: "Aguardiente", src: "/imagenesProductos/aguardiente.png", precio: 100000, cantidad: 1 },
     { nombre: "Buchanans Master", desc: "Buchanans Master", src: "/imagenesProductos/buchanas master.webp", precio: 200000, cantidad: 1 },
     { nombre: "Jose Cuervo", desc: "Jose Cuervo", src: "/imagenesProductos/jose cuervo.png", precio: 77000, cantidad: 1 },
-    { nombre: " Aguardiente Amarillo", desc: "Aguardiente Amarillo", src: "/imagenesProductos/amarillos.png", precio: 50000, cantidad: 1 },
+    { nombre: "Aguardiente Amarillo", desc: "Aguardiente Amarillo", src: "/imagenesProductos/amarillos.png", precio: 50000, cantidad: 1 },
     { nombre: "Red Label", desc: "Red Label", src: "/imagenesProductos/red label.webp", precio: 95000, cantidad: 1 },
     { nombre: "Blue Label", desc: "Blue Label", src: "/imagenesProductos/Blue label.png", precio: 150000, cantidad: 1 },
     { nombre: "Black y White", desc: "Black y White", src: "/imagenesProductos/black y white.webp", precio: 3200, cantidad: 1 },
@@ -45,13 +45,14 @@ function Alcohol() {
     { nombre: "Clase Azul Tequila", desc: "Clase Azul Tequila", src: "/imagenesProductos/clase azul tequila.png", precio: 4494000, cantidad: 1 },
   ]);
 
+  // 🔍 Filtrar productos en base al searchTerm
+  const productosFiltrados = productos.filter((prod) =>
+    prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
   const handleSearch = (e) => {
     e.preventDefault();
-    if (!searchTerm.trim()) {
-      Swal.fire('Atención', 'Por favor ingresa un término para buscar.', 'info');
-      return;
-    }
-    Swal.fire(`Buscando productos para: "${searchTerm}"`);
+    setSearchTerm(searchTerm); // ya filtra directo, no hace falta Swal
   };
 
   const handleLogout = () => {
@@ -130,32 +131,36 @@ function Alcohol() {
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Alcohol</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {productos.map((prod, i) => (
-            <div key={i} className="col">
-              <div className="card h-100 shadow-sm d-flex flex-column">
-                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{prod.nombre}</h5>
-                  <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2"> <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
-                  <div className="d-flex align-items-center mb-2">
-                    <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                    <input
-                      id={`cantidad-${i}`}
-                      type="number"
-                      min="1"
-                      value={prod.cantidad}
-                      onChange={(e) => handleCantidadChange(i, e.target.value)}
-                      className="form-control form-control-sm w-50"
-                    />
-                  </div>
-                  <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+          {productosFiltrados.length > 0 ? (
+            productosFiltrados.map((prod, i) => (
+              <div key={i} className="col">
+                <div className="card h-100 shadow-sm d-flex flex-column">
+                  <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{prod.nombre}</h5>
+                    <p className="card-text">{prod.desc}</p>
+                    <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                    <div className="d-flex align-items-center mb-2">
+                      <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
+                      <input
+                        id={`cantidad-${i}`}
+                        type="number"
+                        min="1"
+                        value={prod.cantidad}
+                        onChange={(e) => handleCantidadChange(i, e.target.value)}
+                        className="form-control form-control-sm w-50"
+                      />
+                    </div>
+                    <div className="mt-auto d-flex justify-content-between">
+                      <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center">No se encontraron productos</p>
+          )}
         </div>
       </section>
 

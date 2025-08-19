@@ -9,7 +9,7 @@ function Verduras() {
   const [searchTerm, setSearchTerm] = useState('');
   const navigate = useNavigate();
 
-  // Usar el contexto del carrito
+  // Contexto del carrito
   const { 
     carrito, 
     mostrarCarrito, 
@@ -19,24 +19,30 @@ function Verduras() {
     totalCarrito 
   } = useCarrito();
 
+  // Productos disponibles
   const [productos, setProductos] = useState([
-    { nombre: "Mazorca", desc: "Mazorca", src: "/imagenesProductos/mazorca.webp", precio: 1200, cantidad: 1 },
-    { nombre: "Lechuga", desc: "Lechuga", src: "/imagenesProductos/lechuga.webp", precio: 2000, cantidad: 1 },
-    { nombre: "Zanahoria", desc: "Zanahoria", src: "/imagenesProductos/zanahoria.webp", precio: 3500, cantidad: 1 },
-    { nombre: "Yuca", desc: "Yuca", src: "/imagenesProductos/yuca.png", precio: 2500, cantidad: 1 },
-    { nombre: "Tomate", desc: "Tomate", src: "/imagenesProductos/tomate.png", precio: 6000, cantidad: 1 },
-    { nombre: "Cebolla", desc: "Cebolla", src: "/imagenesProductos/cebolla.png", precio: 4200, cantidad: 1 },
-    { nombre: "Pepino", desc: "Pepino", src: "/imagenesProductos/pepino.png", precio: 4000, cantidad: 1 },
-    { nombre: "Cilantro", desc: "Cilantro", src: "/imagenesProductos/cilantro.png", precio: 500, cantidad: 1 },
-    { nombre: "Ahuyama", desc: "Ahuyama", src: "/imagenesProductos/auyama.png", precio: 2500, cantidad: 1 },
-    { nombre: "Apio", desc: "Apio", src: "/imagenesProductos/apio.png", precio: 8000, cantidad: 1 },
-    { nombre: "Pimenton", desc: "Pimenton", src: "/imagenesProductos/pimenton.png", precio: 8000, cantidad: 1 },
-    { nombre: "Remolacha", desc: "Remolacha", src: "/imagenesProductos/remo.webp", precio: 6000, cantidad: 1 },
-    { nombre: "Ajo", desc: "Ajo", src: "/imagenesProductos/ajo.png", precio: 1400, cantidad: 1 },
-    { nombre: "Brocoli", desc: "Brocoli", src: "/imagenesProductos/brocoli.webp", precio: 14000, cantidad: 1 },
-    { nombre: "Papa", desc: "Papa", src: "/imagenesProductos/papa.png", precio: 3800, cantidad: 1 },
-    { nombre: "Platano", desc: "Platano", src: "/imagenesProductos/platano.png", precio: 4700, cantidad: 1 },
+    { nombre: "Mazorca", desc: "Mazorca fresca", src: "/imagenesProductos/mazorca.webp", precio: 1200, cantidad: 1 },
+    { nombre: "Lechuga", desc: "Lechuga crocante", src: "/imagenesProductos/lechuga.webp", precio: 2000, cantidad: 1 },
+    { nombre: "Zanahoria", desc: "Zanahoria fresca", src: "/imagenesProductos/zanahoria.webp", precio: 3500, cantidad: 1 },
+    { nombre: "Yuca", desc: "Yuca blanca", src: "/imagenesProductos/yuca.png", precio: 2500, cantidad: 1 },
+    { nombre: "Tomate", desc: "Tomate chonto", src: "/imagenesProductos/tomate.png", precio: 6000, cantidad: 1 },
+    { nombre: "Cebolla", desc: "Cebolla cabezona", src: "/imagenesProductos/cebolla.png", precio: 4200, cantidad: 1 },
+    { nombre: "Pepino", desc: "Pepino cohombro", src: "/imagenesProductos/pepino.png", precio: 4000, cantidad: 1 },
+    { nombre: "Cilantro", desc: "Cilantro fresco", src: "/imagenesProductos/cilantro.png", precio: 500, cantidad: 1 },
+    { nombre: "Ahuyama", desc: "Ahuyama amarilla", src: "/imagenesProductos/auyama.png", precio: 2500, cantidad: 1 },
+    { nombre: "Apio", desc: "Apio verde", src: "/imagenesProductos/apio.png", precio: 8000, cantidad: 1 },
+    { nombre: "Pimenton", desc: "Pimentón rojo", src: "/imagenesProductos/pimenton.png", precio: 8000, cantidad: 1 },
+    { nombre: "Remolacha", desc: "Remolacha morada", src: "/imagenesProductos/remo.webp", precio: 6000, cantidad: 1 },
+    { nombre: "Ajo", desc: "Ajo fresco", src: "/imagenesProductos/ajo.png", precio: 1400, cantidad: 1 },
+    { nombre: "Brocoli", desc: "Brócoli verde", src: "/imagenesProductos/brocoli.webp", precio: 14000, cantidad: 1 },
+    { nombre: "Papa", desc: "Papa criolla", src: "/imagenesProductos/papa.png", precio: 3800, cantidad: 1 },
+    { nombre: "Platano", desc: "Plátano maduro", src: "/imagenesProductos/platano.png", precio: 4700, cantidad: 1 },
   ]);
+
+  // 🔍 Filtrar productos
+  const productosFiltrados = productos.filter((prod) =>
+    prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -64,9 +70,11 @@ function Verduras() {
     });
   };
 
+  // Cambiar cantidad siempre >= 1
   const handleCantidadChange = (index, nuevaCantidad) => {
     const productosActualizados = [...productos];
-    productosActualizados[index].cantidad = parseInt(nuevaCantidad);
+    const cantidadValida = Math.max(1, parseInt(nuevaCantidad) || 1);
+    productosActualizados[index].cantidad = cantidadValida;
     setProductos(productosActualizados);
   };
 
@@ -101,7 +109,13 @@ function Verduras() {
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
             <form className="d-flex me-3" onSubmit={handleSearch}>
-              <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <input 
+                className="form-control me-2" 
+                type="search" 
+                placeholder="Buscar productos" 
+                value={searchTerm} 
+                onChange={(e) => setSearchTerm(e.target.value)} 
+              />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
             <div className="dropdown">
@@ -120,32 +134,44 @@ function Verduras() {
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Verduras</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
-          {productos.map((prod, i) => (
-            <div key={i} className="col">
-              <div className="card h-100 shadow-sm d-flex flex-column">
-                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
-                <div className="card-body d-flex flex-column">
-                  <h5 className="card-title">{prod.nombre}</h5>
-                  <p className="card-text">{prod.desc}</p>
-                  <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
-                  <div className="d-flex align-items-center mb-2">
-                    <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                    <input
-                      id={`cantidad-${i}`}
-                      type="number"
-                      min="1"
-                      value={prod.cantidad}
-                      onChange={(e) => handleCantidadChange(i, e.target.value)}
-                      className="form-control form-control-sm w-50"
-                    />
-                  </div>
-                  <div className="mt-auto d-flex justify-content-between">
-                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+          {productosFiltrados.length > 0 ? (
+            productosFiltrados.map((prod, i) => (
+              <div key={i} className="col">
+                <div className="card h-100 shadow-sm d-flex flex-column">
+                  <img src={prod.src} className="card-img-top" alt={`Imagen de ${prod.nombre}`} style={{ height: '180px', objectFit: 'contain' }} />
+                  <div className="card-body d-flex flex-column">
+                    <h5 className="card-title">{prod.nombre}</h5>
+                    <p className="card-text">{prod.desc}</p>
+                    <div className="mb-2">
+                      <strong>Precio:</strong>{" "}
+                      {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                    </div>
+                    <div className="d-flex align-items-center mb-2">
+                      <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
+                      <input
+                        id={`cantidad-${i}`}
+                        type="number"
+                        min="1"
+                        value={prod.cantidad}
+                        onChange={(e) => handleCantidadChange(i, e.target.value)}
+                        className="form-control form-control-sm w-50"
+                      />
+                    </div>
+                    <div className="mt-auto d-flex justify-content-between">
+                      <button 
+                        className="btn btn-warning btn-sm" 
+                        onClick={() => agregarAlCarrito({ ...prod })}
+                      >
+                        Agregar
+                      </button>
+                    </div>
                   </div>
                 </div>
               </div>
-            </div>
-          ))}
+            ))
+          ) : (
+            <p className="text-center">No se encontraron productos para tu búsqueda.</p>
+          )}
         </div>
       </section>
 
@@ -189,7 +215,13 @@ function Verduras() {
                     <br />
                     {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
                   </div>
-                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                  <button 
+                    className="btn btn-sm btn-dark" 
+                    onClick={() => eliminarDelCarrito(item.nombre)} 
+                    style={{backgroundColor: '#FFD600'}}
+                  >
+                    🗑
+                  </button>
                 </div>
               ))}
               <div className="mt-3">

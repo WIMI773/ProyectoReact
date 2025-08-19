@@ -20,6 +20,7 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
 import Ofertas from './Pages/ofertas/ofertas.js';
 import { CarritoProvider } from './Pages/components/CarritoContext.js';
+import Perfil from './Pages/perfil/perfil.js';
 
 function App() {
   return (
@@ -44,6 +45,7 @@ function App() {
           {/*Rutas Privadas*/}
           <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
           <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
+          <Route path="/perfil" element={<ProtectedRoute> <Perfil/> </ProtectedRoute>} />
 
           {/*Rutas no encontradas*/}
           <Route path="*" element={<NotFoundPage />} />

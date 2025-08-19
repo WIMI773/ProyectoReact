@@ -62,26 +62,26 @@ function Ofertas() {
       precioOferta: 2800
     },
     {
-      nombre: "Cerveza Poker",
-      desc: "Lata 330ml",
-      detalle: "Pack especial de verano",
-      imagen: "/imagenesProductos/Poker.png",
-      precioAnterior: 3500,
-      precioOferta: 2800
+      nombre: "Jabon Ariel",
+      desc: " Jabon en polvo Ariel 2kg",
+      detalle: "Ropa impecable, frescura duradera.",
+      imagen: "/imagenesProductos/jabon ariel.png",
+      precioAnterior: 15000,
+      precioOferta: 12800
     },
     {
-      nombre: "Cerveza Poker",
-      desc: "Lata 330ml",
-      detalle: "Pack especial de verano",
-      imagen: "/imagenesProductos/Poker.png",
-      precioAnterior: 3500,
-      precioOferta: 2800
+      nombre: "Salchichon Cervecero",
+      desc: "Salchichón Zenú Cervecero Premium x 480 g",
+      detalle: "Un sabor auténtico, para momentos únicos.",
+      imagen: "/imagenesProductos/Salchichon oferta.jpg",
+      precioAnterior: 10000,
+      precioOferta: 7500
     },
     {
-      nombre: "Cerveza Poker",
-      desc: "Lata 330ml",
-      detalle: "Pack especial de verano",
-      imagen: "/imagenesProductos/Poker.png",
+      nombre: "Acetaminofen Jarabe",
+      desc: "ACETAMINOFEN 90 ML",
+      detalle: "Alivio seguro, bienestar rápido.",
+      imagen: "/imagenesProductos/acetaminofen jarabe.webp",
       precioAnterior: 3500,
       precioOferta: 2800
     }

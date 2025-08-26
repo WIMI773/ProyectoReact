@@ -10,13 +10,13 @@ function Frutas() {
   const navigate = useNavigate();
 
   // Usar el contexto del carrito en lugar del estado local
-  const { 
-    carrito, 
-    mostrarCarrito, 
-    setMostrarCarrito, 
-    agregarAlCarrito, 
-    eliminarDelCarrito, 
-    totalCarrito 
+  const {
+    carrito,
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    totalCarrito
   } = useCarrito();
 
   const [productos, setProductos] = useState([
@@ -106,12 +106,12 @@ function Frutas() {
             </ul>
             {/* 🔍 Buscador */}
             <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
-              <input 
-                className="form-control me-2" 
-                type="search" 
-                placeholder="Buscar productos" 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Buscar productos"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
@@ -167,7 +167,7 @@ function Frutas() {
       {/* Botón flotante del carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
-        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
         onClick={() => setMostrarCarrito(!mostrarCarrito)}
       >
         🛒
@@ -204,12 +204,18 @@ function Frutas() {
                     <br />
                     {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
                   </div>
-                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFd600', color:'black'}}>Pagar</button>
+                <button
+                  className="btn btn-dark w-100"
+                  style={{ backgroundColor: '#FFd600', color: 'black' }}
+                  onClick={() => navigate('/CarritoPagos')}  // <-- Redirección
+                >
+                  Pagar
+                </button>
               </div>
             </>
           )}

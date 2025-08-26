@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import LoginPage from './Pages/LoginPage/LoginPage';
 import Recuperar from './Pages/Recuperar/Recuperar';
 import Registrar from './Pages/Registrar/Registrar';
-import PaginaPrincipal from './Pages/PaginaPrincipal/PaginaPrincipal'; 
+import PaginaPrincipal from './Pages/PaginaPrincipal/PaginaPrincipal';
 import UseStateExample from './Playground/UseStateExample';
 import UseEffectExample from './Playground/useEffectExample';
 import ProtectedRoute from './Pages/components/ProtectedRoute';
@@ -21,6 +21,9 @@ import Contacto from './Pages/Contacto/contacto';
 import Ofertas from './Pages/ofertas/ofertas.js';
 import { CarritoProvider } from './Pages/components/CarritoContext.js';
 import Perfil from './Pages/perfil/perfil.js';
+import CarritoPagos from './Pages/Pagos/CarritoPagos.js';
+import MetodosPagos from './Pages/Pagos/MetodosPagos.js';
+import PagosNequi from './Pages/Pagos/PagosNequi.js';
 
 function App() {
   return (
@@ -32,20 +35,34 @@ function App() {
           <Route path="/Recuperar" element={<Recuperar />} />
           <Route path="/Registrar" element={<Registrar />} />
           <Route path="/ResetPassword" element={<ResetPassword />} />
-          <Route path="/ofertas" element={<Ofertas/>} />
+          <Route path="/ofertas" element={<Ofertas />} />
           <Route path="/Frutas" element={<Frutas />} />
           <Route path="/Aseo" element={<Aseo />} />
           <Route path="/Carnes" element={<Carnes />} />
           <Route path="/Lacteos" element={<Lacteos />} />
-          <Route path="/Alcohol" element={<Alcohol />}/> 
-          <Route path="/Verduras" element={<Verduras />}/> 
-          <Route path="/contacto" element={<Contacto />}/> 
-          <Route path="/Medicamentos" element={<Medicamentos />}/> 
+          <Route path="/Alcohol" element={<Alcohol />} />
+          <Route path="/Verduras" element={<Verduras />} />
+          <Route path="/contacto" element={<Contacto />} />
+          <Route path="/Medicamentos" element={<Medicamentos />} />
+          <Route path="/CarritoPagos" element={<CarritoPagos />} />
+                    <Route path="/PagosNequi" element={<PagosNequi />} />
+
+
+
+
 
           {/*Rutas Privadas*/}
           <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
           <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
-          <Route path="/perfil" element={<ProtectedRoute> <Perfil/> </ProtectedRoute>} />
+          <Route path="/perfil" element={<ProtectedRoute> <Perfil /> </ProtectedRoute>} />
+          <Route path="/MetodosPagos" element={<ProtectedRoute> <MetodosPagos /> </ProtectedRoute>} />
+
+          
+
+
+
+
+
 
           {/*Rutas no encontradas*/}
           <Route path="*" element={<NotFoundPage />} />

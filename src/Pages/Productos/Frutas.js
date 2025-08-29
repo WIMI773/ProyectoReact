@@ -199,10 +199,17 @@ function Frutas() {
             <>
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
-                  <div>
-                    <strong>{item.nombre}</strong>
-                    <br />
-                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  <div className="d-flex align-items-center">
+                    <img 
+                      src={item.src} 
+                      alt={item.nombre} 
+                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }} 
+                    />
+                    <div>
+                      <strong>{item.nombre}</strong>
+                      <br />
+                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                    </div>
                   </div>
                   <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>

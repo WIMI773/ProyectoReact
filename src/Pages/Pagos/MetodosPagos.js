@@ -8,7 +8,6 @@ import tarjeta from '../../images/tarjeta.avif';
 import pagocontra from '../../images/pagocontra.png';
 import banco from '../../images/banco.png';
 
-
 const MetodosPagos = () => {
   const [metodoPago, setMetodoPago] = useState('');
   const [searchTerm, setSearchTerm] = useState('');
@@ -28,16 +27,10 @@ const MetodosPagos = () => {
     const metodo = e.target.value;
     setMetodoPago(metodo);
 
-    // Redirigir a la página correspondiente
-    if (metodo === 'Nequi') {
-      navigate('/PagosNequi');
-    } else if (metodo === 'Tarjeta de crédito') {
-      navigate('/pago-tarjeta');
-    } else if (metodo === 'Bancolombia') {
-      navigate('/pago-bancolombia');
-    } else if (metodo === 'Pago contra entrega') {
-      navigate('/pago-efectivo');
-    }
+    if (metodo === 'Nequi') navigate('/PagosNequi');
+    else if (metodo === 'Tarjeta de crédito') navigate('/pago-tarjeta');
+    else if (metodo === 'Bancolombia') navigate('/pago-bancolombia');
+    else if (metodo === 'Pago contra entrega') navigate('/pago-efectivo');
   };
 
   return (
@@ -199,27 +192,103 @@ const MetodosPagos = () => {
             </label>
           </div>
         </form>
+
+        {/* Slider con descripción dinámica */}
+        {metodoPago && (
+          <div
+            id="paymentDescriptionCarousel"
+            className="carousel slide mt-5"
+            data-bs-ride="carousel"
+            style={{ maxWidth: '500px', margin: '0 auto' }}
+          >
+            <div className="carousel-inner text-center p-4 bg-light rounded shadow-sm">
+              <div className={`carousel-item ${metodoPago === 'Tarjeta de crédito' ? 'active' : ''}`}>
+                <img src={tarjeta} alt="Tarjeta de crédito" style={{ width: '80px', marginBottom: '15px' }} />
+                <h5>Tarjeta de crédito</h5>
+                <p>Paga con tarjeta de crédito de forma segura y rápida.</p>
+              </div>
+              <div className={`carousel-item ${metodoPago === 'Nequi' ? 'active' : ''}`}>
+                <img src={nequi} alt="Nequi" style={{ width: '80px', marginBottom: '15px' }} />
+                <h5>Nequi</h5>
+                <p>Usa Nequi para pagos rápidos y sin comisiones adicionales.</p>
+              </div>
+              <div className={`carousel-item ${metodoPago === 'Bancolombia' ? 'active' : ''}`}>
+                <img src={banco} alt="Bancolombia" style={{ width: '80px', marginBottom: '15px' }} />
+                <h5>Bancolombia</h5>
+                <p>Realiza tu pago directamente desde tu cuenta Bancolombia.</p>
+              </div>
+              <div className={`carousel-item ${metodoPago === 'Pago contra entrega' ? 'active' : ''}`}>
+                <img src={pagocontra} alt="Pago contra entrega" style={{ width: '80px', marginBottom: '15px' }} />
+                <h5>Pago contra entrega</h5>
+                <p>Paga en efectivo cuando recibas tu pedido en casa.</p>
+              </div>
+            </div>
+
+            <button
+              className="carousel-control-prev"
+              type="button"
+              data-bs-target="#paymentDescriptionCarousel"
+              data-bs-slide="prev"
+              style={{ filter: 'invert(1)' }}
+            >
+              <span className="carousel-control-prev-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Anterior</span>
+            </button>
+            <button
+              className="carousel-control-next"
+              type="button"
+              data-bs-target="#paymentDescriptionCarousel"
+              data-bs-slide="next"
+              style={{ filter: 'invert(1)' }}
+            >
+              <span className="carousel-control-next-icon" aria-hidden="true"></span>
+              <span className="visually-hidden">Siguiente</span>
+            </button>
+          </div>
+        )}
+
+        {/* Botón Volver al inicio */}
+        <div className="d-flex justify-content-center mt-4">
+          <button
+            type="button"
+            className="btn btn"
+            style={{ backgroundColor: '#e4e4e4ff' }}
+            onClick={() => navigate('/PaginaPrincipal')}
+          >
+            Volver al inicio
+          </button>
+
+          
+        </div>
       </div>
 
-      {/* Estilos CSS */}
+      
+
+      {/* Estilos CSS mejorados pero con letras originales */}
       <style>{`
         .payment-box {
-          border: 2px solid #ccc;
+          border: 2px solid #FFD600;
           border-radius: 10px;
           padding: 20px;
           width: 150px;
           text-align: center;
-          transition: border-color 0.3s, background-color 0.3s;
+          transition: border-color 0.3s, background-color 0.3s, box-shadow 0.3s, transform 0.3s;
           user-select: none;
+          background-color: #fff;
+          box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+          cursor: pointer;
         }
         .payment-box:hover {
           border-color: #28a745;
           background-color: #e6ffe6;
+          box-shadow: 0 8px 15px rgba(40, 167, 69, 0.3);
+          transform: translateY(-4px);
         }
         .payment-box.selected {
           border-color: #28a745;
           background-color: #d4edda;
-          box-shadow: 0 0 8px rgba(40, 167, 69, 0.6);
+          box-shadow: 0 0 12px rgba(40, 167, 69, 0.6);
+          transform: translateY(-6px);
         }
       `}</style>
     </>

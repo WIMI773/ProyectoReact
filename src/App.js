@@ -20,10 +20,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
 import Ofertas from './Pages/ofertas/ofertas.js';
 import { CarritoProvider } from './Pages/components/CarritoContext.js';
-import Perfil from './Pages/perfil/perfil.js';
 import CarritoPagos from './Pages/Pagos/CarritoPagos.js';
 import MetodosPagos from './Pages/Pagos/MetodosPagos.js';
 import PagosNequi from './Pages/Pagos/PagosNequi.js';
+import Perfil from './Pages/perfil/perfil.js';
 
 function App() {
   return (

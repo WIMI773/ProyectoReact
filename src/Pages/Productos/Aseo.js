@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { auth } from '../../Firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useCarrito } from '../components/CarritoContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useCarrito } from '../components/CarritoContext';
 
 function Aseo() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const {
@@ -17,6 +20,14 @@ function Aseo() {
     eliminarDelCarrito,
     totalCarrito
   } = useCarrito();
+
+  // Detectar usuario logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [productos, setProductos] = useState([
     { nombre: "Clorox", desc: "Clorox", src: "/imagenesProductos/cloroxxx.webp", precio: 6500, cantidad: 1 },
@@ -67,13 +78,14 @@ function Aseo() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        auth.signOut();
         navigate('/');
       }
     });
   };
 
   const handleCantidadChange = (index, nuevaCantidad) => {
-    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1); // ✅ nunca deja en NaN ni <1
+    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     const productosActualizados = [...productos];
     productosActualizados[index].cantidad = cantidad;
     setProductos(productosActualizados);
@@ -94,9 +106,9 @@ function Aseo() {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
@@ -109,18 +121,45 @@ function Aseo() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
+
+            {/* 🔍 Buscador */}
             <form className="d-flex me-3" onSubmit={handleSearch}>
               <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            <div className="dropdown">
-              <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'black' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
-              </ul>
-            </div>
+
+            {/* 👤 Menú de usuario */}
+            {user ? (
+              <div className="dropdown">
+                <button
+                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                  ) : (
+                    <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
+                  )}
+                  {user.displayName || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
+                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            ) : (
+              <Link to="/" className="btn btn-danger">Iniciar Sesión</Link>
+            )}
           </div>
         </div>
       </nav>
@@ -164,7 +203,7 @@ function Aseo() {
         </div>
       </section>
 
-      {/* Botón flotante del carrito */}
+      {/* 🛒 Botón flotante del carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
@@ -178,7 +217,7 @@ function Aseo() {
         )}
       </button>
 
-      {/* Carrito flotante */}
+      {/* 🛒 Carrito flotante */}
       {mostrarCarrito && (
         <div
           className="position-fixed bg-light border p-3 shadow-lg"

@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { auth } from '../../Firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useCarrito } from '../components/CarritoContext';
 
 function Frutas() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   // Usar el contexto del carrito en lugar del estado local
@@ -18,6 +21,14 @@ function Frutas() {
     eliminarDelCarrito,
     totalCarrito
   } = useCarrito();
+
+  // Detectar usuario logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [productos, setProductos] = useState([
     { nombre: "Banano", desc: "Banano", src: "/imagenesProductos/banano.png", precio: 1000, cantidad: 1 },
@@ -63,6 +74,7 @@ function Frutas() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        auth.signOut();
         navigate('/');
       }
     });
@@ -115,14 +127,29 @@ function Frutas() {
               />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            <div className="dropdown">
-              <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'black' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
-              </ul>
-            </div>
+            {/* 👤 Menú usuario */}
+            {user ? (
+              <div className="dropdown">
+                <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  {user.photoURL ? (
+                    <img src={user.photoURL} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
+                  ) : (
+                    <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
+                  )}
+                  {user.displayName || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
+                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            ) : (
+              <Link to="/" className="btn btn-danger">Iniciar Sesión</Link>
+            )}
           </div>
         </div>
       </nav>
@@ -180,8 +207,7 @@ function Frutas() {
 
       {/* Carrito flotante */}
       {mostrarCarrito && (
-        <div
-          className="position-fixed bg-light border p-3 shadow-lg"
+        <div className="position-fixed bg-light border p-3 shadow-lg"
           style={{
             bottom: '90px',
             right: '20px',
@@ -200,10 +226,10 @@ function Frutas() {
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
                   <div className="d-flex align-items-center">
-                    <img 
-                      src={item.src} 
-                      alt={item.nombre} 
-                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }} 
+                    <img
+                      src={item.src}
+                      alt={item.nombre}
+                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }}
                     />
                     <div>
                       <strong>{item.nombre}</strong>
@@ -219,7 +245,7 @@ function Frutas() {
                 <button
                   className="btn btn-dark w-100"
                   style={{ backgroundColor: '#FFd600', color: 'black' }}
-                  onClick={() => navigate('/CarritoPagos')}  // <-- Redirección
+                  onClick={() => navigate('/CarritoPagos')}
                 >
                   Pagar
                 </button>
@@ -227,6 +253,27 @@ function Frutas() {
             </>
           )}
         </div>
+      )}
+
+      {/* 🧑 Perfil del usuario */}
+      {user && (
+        <section className="container py-5">
+          <div className="card shadow-lg border-0">
+            <div className="card-body text-center">
+              <img
+                src={user.photoURL || "https://via.placeholder.com/150"}
+                alt="Avatar"
+                className="rounded-circle mb-3"
+                style={{ width: '100px', height: '100px' }}
+              />
+              <h4 className="card-title">{user.displayName || "Usuario"}</h4>
+              <p className="card-text text-muted">{user.email}</p>
+              <button className="btn btn-outline-danger" onClick={handleLogout}>
+                Cerrar Sesión
+              </button>
+            </div>
+          </div>
+        </section>
       )}
     </>
   );

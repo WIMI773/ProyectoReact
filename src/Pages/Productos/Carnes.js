@@ -1,23 +1,34 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { auth } from '../../Firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useCarrito } from '../components/CarritoContext';
 
 function Carnes() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Usar el contexto del carrito
-  const { 
-    carrito, 
-    mostrarCarrito, 
-    setMostrarCarrito, 
-    agregarAlCarrito, 
-    eliminarDelCarrito, 
-    totalCarrito 
+  // Contexto del carrito
+  const {
+    carrito,
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    totalCarrito
   } = useCarrito();
+
+  // Detectar usuario logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [productos, setProductos] = useState([
     { nombre: "Lomo de Cerdo", desc: "Lomo de Cerdo", src: "/imagenesProductos/lomo.webp", precio: 1000, cantidad: 1 },
@@ -57,6 +68,7 @@ function Carnes() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        auth.signOut();
         navigate('/');
       }
     });
@@ -98,18 +110,45 @@ function Carnes() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
+
+            {/* Buscador */}
             <form className="d-flex me-3" onSubmit={handleSearch}>
               <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            <div className="dropdown">
-              <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'black' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
-              </ul>
-            </div>
+
+            {/* Menú de usuario */}
+            {user ? (
+              <div className="dropdown">
+                <button
+                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                  ) : (
+                    <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
+                  )}
+                  {user.displayName || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
+                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            ) : (
+              <Link to="/" className="btn btn-danger">Iniciar Sesión</Link>
+            )}
           </div>
         </div>
       </nav>

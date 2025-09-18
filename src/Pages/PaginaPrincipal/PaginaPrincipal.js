@@ -65,7 +65,7 @@ function PaginaPrincipal() {
           </button>
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item"><Link className="nav-link active" to="/">Inicio</Link></li>
+              <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
@@ -101,7 +101,7 @@ function PaginaPrincipal() {
               <div className="dropdown">
                 <button
                   className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"

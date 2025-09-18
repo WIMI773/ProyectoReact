@@ -1,24 +1,35 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { auth } from '../../Firebase';
+import { onAuthStateChanged } from 'firebase/auth';
+import { useCarrito } from '../components/CarritoContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useCarrito } from '../components/CarritoContext';
 
 function Medicamentos() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  const { 
-    carrito, 
-    mostrarCarrito, 
-    setMostrarCarrito, 
-    agregarAlCarrito, 
-    eliminarDelCarrito, 
-    totalCarrito 
+  const {
+    carrito,
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    totalCarrito
   } = useCarrito();
 
-  // Lista de productos (no es necesario usar estado aquí)
+  // Detectar usuario logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
+
+  // Lista de productos
   const productos = [
     { nombre: "Metocarbamol/Ibuprofeno", desc: "Metocarbamol/Ibuprofeno 500/200 mg", src: "/imagenesProductos/metocarbamol.png", precio: 40400, cantidad: 1 },
     { nombre: "Acetaminofen Jarabe", desc: "Acetaminofen Jarabe 90 ml", src: "/imagenesProductos/acetaminofen jarabe.webp", precio: 7400, cantidad: 1 },
@@ -34,7 +45,6 @@ function Medicamentos() {
     { nombre: "Acetaminofen Forte", desc: "Acetaminofen Forte 500 mg", src: "/imagenesProductos/acetaminofen forte.png", precio: 10300, cantidad: 1 },
   ];
 
-  // Filtrar productos
   const productosFiltrados = productos.filter((prod) =>
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -60,6 +70,7 @@ function Medicamentos() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        auth.signOut();
         navigate('/');
       }
     });
@@ -99,14 +110,39 @@ function Medicamentos() {
               <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            <div className="dropdown">
-              <button className="btn d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'white' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><button className="dropdown-item text-danger" type="button" onClick={handleLogout}>Cerrar Sesión</button></li>
-              </ul>
-            </div>
+
+            {/* Menú de usuario igual que en PaginaPrincipal */}
+            {user ? (
+              <div className="dropdown">
+                <button
+                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                  ) : (
+                    <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
+                  )}
+                  {user.displayName || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
+                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            ) : (
+              <Link to="/" className="btn btn-danger">Iniciar Sesión</Link>
+            )}
           </div>
         </div>
       </nav>

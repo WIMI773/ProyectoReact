@@ -133,7 +133,7 @@ function Aseo() {
               <div className="dropdown">
                 <button
                   className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
@@ -164,9 +164,10 @@ function Aseo() {
         </div>
       </nav>
 
+
       {/* Sección Aseo */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Sección Aseo</h2>
+        <h2 className="mb-4 text-center">Seccion Aseo</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {productosFiltrados.length > 0 ? (
             productosFiltrados.map((prod, i) => (

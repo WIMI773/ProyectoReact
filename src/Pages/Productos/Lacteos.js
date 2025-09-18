@@ -1,12 +1,15 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
+import { auth } from '../../Firebase';
+import { onAuthStateChanged } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useCarrito } from '../components/CarritoContext';
 
 function Lacteos() {
   const [searchTerm, setSearchTerm] = useState('');
+  const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
   const {
@@ -17,6 +20,14 @@ function Lacteos() {
     eliminarDelCarrito,
     totalCarrito
   } = useCarrito();
+
+  // Detectar usuario logueado
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
+      setUser(currentUser);
+    });
+    return () => unsubscribe();
+  }, []);
 
   const [productos, setProductos] = useState([
     { nombre: "Yox", desc: "Yox caja por 12", src: "/imagenesProductos/yoxx.png", precio: 20230, cantidad: 1 },
@@ -66,6 +77,7 @@ function Lacteos() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
+        auth.signOut();
         navigate('/');
       }
     });
@@ -92,9 +104,9 @@ function Lacteos() {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
@@ -107,18 +119,44 @@ function Lacteos() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
+
             <form className="d-flex me-3" onSubmit={handleSearch}>
               <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            <div className="dropdown">
-              <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center" style={{ backgroundColor: '#F44336', color: 'black' }} type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
-                <i className="bi bi-person-circle" style={{ fontSize: '1.5rem' }}></i>
-              </button>
-              <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
-                <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
-              </ul>
-            </div>
+
+            {/* Menú de usuario */}
+            {user ? (
+              <div className="dropdown">
+                <button
+                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
+                  type="button"
+                  id="userDropdown"
+                  data-bs-toggle="dropdown"
+                  aria-expanded="false"
+                >
+                  {user.photoURL ? (
+                    <img
+                      src={user.photoURL}
+                      alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
+                    />
+                  ) : (
+                    <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
+                  )}
+                  {user.displayName || "Usuario"}
+                </button>
+                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                  <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
+                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><hr className="dropdown-divider" /></li>
+                  <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
+                </ul>
+              </div>
+            ) : (
+              <Link to="/" className="btn btn-danger">Iniciar Sesión</Link>
+            )}
           </div>
         </div>
       </nav>
@@ -159,6 +197,25 @@ function Lacteos() {
           )}
         </div>
       </section>
+
+      {/* Nueva sección de Perfil */}
+      {user && (
+        <section className="container py-5">
+          <h2 className="mb-4 text-center">Mi Perfil</h2>
+          <div className="card mx-auto shadow-lg" style={{ maxWidth: '500px', borderRadius: '15px' }}>
+            <div className="card-body text-center">
+              {user.photoURL ? (
+                <img src={user.photoURL} alt="Avatar" className="rounded-circle mb-3" style={{ width: '100px', height: '100px', objectFit: 'cover' }} />
+              ) : (
+                <i className="bi bi-person-circle" style={{ fontSize: '4rem', color: '#ccc' }}></i>
+              )}
+              <h5 className="card-title mt-2">{user.displayName || "Usuario"}</h5>
+              <p className="card-text text-muted">{user.email}</p>
+              <button className="btn btn-danger" onClick={handleLogout}>Cerrar Sesión</button>
+            </div>
+          </div>
+        </section>
+      )}
 
       {/* Botón flotante del carrito */}
       <button

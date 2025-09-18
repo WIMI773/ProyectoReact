@@ -122,7 +122,7 @@ function Carnes() {
               <div className="dropdown">
                 <button
                   className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
@@ -152,6 +152,7 @@ function Carnes() {
           </div>
         </div>
       </nav>
+      
 
       {/* Sección Carnes */}
       <section className="container py-5">

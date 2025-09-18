@@ -3,6 +3,7 @@ import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { auth } from '../../Firebase';
 import { onAuthStateChanged } from 'firebase/auth';
+import { useCarrito } from '../components/CarritoContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 
@@ -11,6 +12,15 @@ function Alcohol() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
+  const {
+    carrito,
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    totalCarrito
+  } = useCarrito();
+
   // Detectar usuario logueado
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -18,6 +28,22 @@ function Alcohol() {
     });
     return () => unsubscribe();
   }, []);
+
+  const [productos, setProductos] = useState([
+    { nombre: "Ron Caldas", desc: "Ron viejo de caldas 1000ml", src: "/imagenesProductos/ron.png", precio: 70000, cantidad: 1 },
+    { nombre: "Aguardiente Antioqueño", desc: "Aguardiente Antioqueño 375ml", src: "/imagenesProductos/antioqueño.png", precio: 40000, cantidad: 1 },
+    { nombre: "Whisky Buchanans", desc: "Buchanans Master 750ml", src: "/imagenesProductos/buchanas master.webp", precio: 200000, cantidad: 1 },
+    { nombre: "Tequila Jose Cuervo", desc: "Botella 700ml", src: "/imagenesProductos/jose cuervo.png", precio: 77000, cantidad: 1 },
+    { nombre: "Cerveza Poker", desc: "Lata 330ml", src: "/imagenesProductos/poker.png", precio: 3500, cantidad: 1 },
+    { nombre: "Cerveza Aguila", desc: "Botella 330ml", src: "/imagenesProductos/aguila.png", precio: 1800, cantidad: 1 },
+    { nombre: "Cerveza Corona", desc: "Coronita 355ml", src: "/imagenesProductos/coronitass.png", precio: 20000, cantidad: 1 },
+    { nombre: "Red Label", desc: "Whisky Johnnie Walker Red Label", src: "/imagenesProductos/red label.webp", precio: 95000, cantidad: 1 }
+  ]);
+
+  // 🔍 Filtrar productos
+  const productosFiltrados = productos.filter((prod) =>
+    prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
+  );
 
   const handleSearch = (e) => {
     e.preventDefault();
@@ -46,16 +72,12 @@ function Alcohol() {
     });
   };
 
-  const productos = [
-    { nombre: "Ron Caldas", desc: "Ron viejo de caldas 1000ml", src: "/imagenesProductos/ron.png", precio: 70000 },
-    { nombre: "Aguardiente Antioqueño", desc: "Aguardiente Antioqueño 375ml", src: "/imagenesProductos/antioqueño.png", precio: 40000 },
-    { nombre: "Whisky Buchanans", desc: "Buchanans Master 750ml", src: "/imagenesProductos/buchanas master.webp", precio: 200000 },
-    { nombre: "Tequila Jose Cuervo", desc: "Botella 700ml", src: "/imagenesProductos/jose cuervo.png", precio: 77000 },
-    { nombre: "Cerveza Poker", desc: "Lata 330ml", src: "/imagenesProductos/poker.png", precio: 3500 },
-    { nombre: "Cerveza Aguila", desc: "Botella 330ml", src: "/imagenesProductos/aguila.png", precio: 1800 },
-    { nombre: "Cerveza Corona", desc: "Coronita 355ml", src: "/imagenesProductos/coronitass.png", precio: 20000 },
-    { nombre: "Red Label", desc: "Whisky Johnnie Walker Red Label", src: "/imagenesProductos/red label.webp", precio: 95000 }
-  ];
+  const handleCantidadChange = (index, nuevaCantidad) => {
+    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
+    const productosActualizados = [...productos];
+    productosActualizados[index].cantidad = cantidad;
+    setProductos(productosActualizados);
+  };
 
   return (
     <>
@@ -68,7 +90,7 @@ function Alcohol() {
           </button>
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
-              <li className="nav-item"><Link className="nav-link active" to="/">Inicio</Link></li>
+              <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
                 <ul className="dropdown-menu" aria-labelledby="productosDropdown">
@@ -87,6 +109,8 @@ function Alcohol() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
+
+            {/* 🔍 Buscador */}
             <form className="d-flex me-3" onSubmit={handleSearch}>
               <input
                 className="form-control me-2"
@@ -103,7 +127,7 @@ function Alcohol() {
               <div className="dropdown">
                 <button
                   className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#F44336', color: 'black' }}
+                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
                   type="button"
                   id="userDropdown"
                   data-bs-toggle="dropdown"
@@ -134,35 +158,92 @@ function Alcohol() {
         </div>
       </nav>
 
-      {/* Encabezado sección alcohol */}
-      <header className="text-center py-5" style={{ backgroundColor: '#f8f9fa' }}>
-        <div className="container">
-          <h1 className="fw-bold mb-3">Sección de <span style={{ color: '#FFD600' }}>Alcohol</span></h1>
-          <p className="mb-4" style={{ fontSize: '1.2rem', color: '#000000ff' }}>
-            Descubre nuestras mejores bebidas y licores.
-          </p>
-        </div>
-      </header>
-
       {/* Productos de alcohol */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Bebidas disponibles</h2>
-        <div className="row">
-          {productos.map((prod, index) => (
-            <div className="col-md-3 mb-4" key={index}>
-              <div className="card h-100 shadow-sm">
-                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '200px', objectFit: 'contain' }} />
+        <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+          {productosFiltrados.map((prod, i) => (
+            <div key={i} className="col">
+              <div className="card h-100 shadow-sm d-flex flex-column">
+                <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
                 <div className="card-body d-flex flex-column">
                   <h5 className="card-title">{prod.nombre}</h5>
                   <p className="card-text">{prod.desc}</p>
-                  <p className="fw-bold">${prod.precio.toLocaleString('es-CO')}</p>
-                  <button className="btn btn-warning btn-sm mt-auto">Agregar</button>
+                  <div className="mb-2">
+                    <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  </div>
+                  <div className="d-flex align-items-center mb-2">
+                    <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
+                    <input
+                      id={`cantidad-${i}`}
+                      type="number"
+                      min="1"
+                      value={prod.cantidad}
+                      onChange={(e) => handleCantidadChange(i, e.target.value)}
+                      className="form-control form-control-sm w-50"
+                    />
+                  </div>
+                  <div className="mt-auto d-flex justify-content-between">
+                    <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+                  </div>
                 </div>
               </div>
             </div>
           ))}
         </div>
       </section>
+
+      {/* 🛒 Botón flotante del carrito */}
+      <button
+        className="btn btn-dark rounded-circle shadow-lg position-fixed"
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
+        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+      >
+        🛒
+        {carrito.length > 0 && (
+          <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
+            {carrito.length}
+          </span>
+        )}
+      </button>
+
+      {/* 🛒 Carrito flotante */}
+      {mostrarCarrito && (
+        <div
+          className="position-fixed bg-light border p-3 shadow-lg"
+          style={{
+            bottom: '90px',
+            right: '20px',
+            width: '300px',
+            maxHeight: '400px',
+            overflowY: 'auto',
+            borderRadius: '10px',
+            zIndex: 1000
+          }}
+        >
+          <h5 className="text-center">Carrito De Compras</h5>
+          {carrito.length === 0 ? (
+            <p className="text-center">Carrito vacío</p>
+          ) : (
+            <>
+              {carrito.map((item, index) => (
+                <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
+                  <div>
+                    <strong>{item.nombre}</strong>
+                    <br />
+                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  </div>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
+                </div>
+              ))}
+              <div className="mt-3">
+                <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
+                <button className="btn btn-dark w-100" style={{ backgroundColor: '#FFD600', color: 'black' }}>Pagar</button>
+              </div>
+            </>
+          )}
+        </div>
+      )}
 
       {/* Footer */}
       <footer className="bg-dark text-light py-4">

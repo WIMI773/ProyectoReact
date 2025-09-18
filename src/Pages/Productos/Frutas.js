@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { auth } from '../../Firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
 import { useCarrito } from '../components/CarritoContext';
@@ -12,7 +12,7 @@ function Frutas() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Usar el contexto del carrito en lugar del estado local
+  // Contexto del carrito
   const {
     carrito,
     mostrarCarrito,
@@ -30,6 +30,7 @@ function Frutas() {
     return () => unsubscribe();
   }, []);
 
+  // Productos
   const [productos, setProductos] = useState([
     { nombre: "Banano", desc: "Banano", src: "/imagenesProductos/banano.png", precio: 1000, cantidad: 1 },
     { nombre: "Fresa", desc: "Fresa", src: "/imagenesProductos/fresa.png", precio: 2500, cantidad: 1 },
@@ -57,11 +58,12 @@ function Frutas() {
     { nombre: "Tamarindo", desc: "Tamarindo", src: "/imagenesProductos/tamarindo.png", precio: 3000, cantidad: 1 },
   ]);
 
-  // 🔍 Filtrar productos en base al searchTerm
+  // Filtrar productos
   const productosFiltrados = productos.filter((prod) =>
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
+  // Cerrar sesión
   const handleLogout = () => {
     Swal.fire({
       title: '¿Cerrar sesión?',
@@ -74,12 +76,12 @@ function Frutas() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        auth.signOut();
-        navigate('/');
+        signOut(auth).then(() => navigate('/'));
       }
     });
   };
 
+  // Cambiar cantidad
   const handleCantidadChange = (index, nuevaCantidad) => {
     const productosActualizados = [...productos];
     productosActualizados[index].cantidad = parseInt(nuevaCantidad);
@@ -88,19 +90,20 @@ function Frutas() {
 
   return (
     <>
-      {/* Navbar */}
+      {/* 🔝 Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
           <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">LaAmistad</Link>
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span className="navbar-toggler-icon" />
           </button>
+
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
-                <ul className="dropdown-menu" aria-labelledby="productosDropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Productos</a>
+                <ul className="dropdown-menu">
                   <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
                   <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
@@ -116,6 +119,7 @@ function Frutas() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
+
             {/* 🔍 Buscador */}
             <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
               <input
@@ -127,12 +131,13 @@ function Frutas() {
               />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
-            {/* 👤 Menú usuario */}
+
+            {/* 👤 Usuario */}
             {user ? (
               <div className="dropdown">
                 <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#F44336', color: 'black' }}
-                  type="button" id="userDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                  style={{ backgroundColor: '#fff', color: 'black' }}
+                  type="button" data-bs-toggle="dropdown">
                   {user.photoURL ? (
                     <img src={user.photoURL} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
                   ) : (
@@ -140,7 +145,7 @@ function Frutas() {
                   )}
                   {user.displayName || "Usuario"}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <ul className="dropdown-menu dropdown-menu-end">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
                   <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
@@ -154,7 +159,7 @@ function Frutas() {
         </div>
       </nav>
 
-      {/* Sección Frutas */}
+      {/* 🍎 Sección Frutas */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Frutas</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -191,7 +196,7 @@ function Frutas() {
         </div>
       </section>
 
-      {/* Botón flotante del carrito */}
+      {/* 🛒 Botón flotante carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
@@ -205,7 +210,7 @@ function Frutas() {
         )}
       </button>
 
-      {/* Carrito flotante */}
+      {/* 🛍 Carrito */}
       {mostrarCarrito && (
         <div className="position-fixed bg-light border p-3 shadow-lg"
           style={{
@@ -253,27 +258,6 @@ function Frutas() {
             </>
           )}
         </div>
-      )}
-
-      {/* 🧑 Perfil del usuario */}
-      {user && (
-        <section className="container py-5">
-          <div className="card shadow-lg border-0">
-            <div className="card-body text-center">
-              <img
-                src={user.photoURL || "https://via.placeholder.com/150"}
-                alt="Avatar"
-                className="rounded-circle mb-3"
-                style={{ width: '100px', height: '100px' }}
-              />
-              <h4 className="card-title">{user.displayName || "Usuario"}</h4>
-              <p className="card-text text-muted">{user.email}</p>
-              <button className="btn btn-outline-danger" onClick={handleLogout}>
-                Cerrar Sesión
-              </button>
-            </div>
-          </div>
-        </section>
       )}
     </>
   );

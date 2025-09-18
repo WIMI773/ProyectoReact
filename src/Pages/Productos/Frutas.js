@@ -12,7 +12,7 @@ function Frutas() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Contexto del carrito
+  // Contexto carrito
   const {
     carrito,
     mostrarCarrito,
@@ -88,9 +88,18 @@ function Frutas() {
     setProductos(productosActualizados);
   };
 
+  // Ir a carrito
+  const handleIrCarrito = () => {
+    if (carrito.length === 0) {
+      Swal.fire("Carrito vacío", "Agrega productos antes de pagar", "warning");
+      return;
+    }
+    navigate("/Carrito"); // 👉 lleva a la página Carrito
+  };
+
   return (
     <>
-      {/* 🔝 Navbar */}
+      {/* Navbar */}
       <nav className="navbar navbar-expand-lg sticky-top" style={{ backgroundColor: '#FFD600' }}>
         <div className="container">
           <Link className="navbar-brand fw-bold" to="/PaginaPrincipal">LaAmistad</Link>
@@ -120,7 +129,7 @@ function Frutas() {
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
 
-            {/* 🔍 Buscador */}
+            {/* Buscador */}
             <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
               <input
                 className="form-control me-2"
@@ -132,7 +141,7 @@ function Frutas() {
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
 
-            {/* 👤 Usuario */}
+            {/* Usuario */}
             {user ? (
               <div className="dropdown">
                 <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
@@ -147,7 +156,7 @@ function Frutas() {
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
-                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><Link className="dropdown-item" to="/MisPedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>
@@ -159,7 +168,7 @@ function Frutas() {
         </div>
       </nav>
 
-      {/* 🍎 Sección Frutas */}
+      {/* Productos */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Frutas</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -196,7 +205,7 @@ function Frutas() {
         </div>
       </section>
 
-      {/* 🛒 Botón flotante carrito */}
+      {/* Botón flotante carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
@@ -210,7 +219,7 @@ function Frutas() {
         )}
       </button>
 
-      {/* 🛍 Carrito */}
+      {/* Carrito flotante */}
       {mostrarCarrito && (
         <div className="position-fixed bg-light border p-3 shadow-lg"
           style={{
@@ -249,8 +258,8 @@ function Frutas() {
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
                 <button
                   className="btn btn-dark w-100"
-                  style={{ backgroundColor: '#FFd600', color: 'black' }}
-                  onClick={() => navigate('/CarritoPagos')}
+                  style={{ backgroundColor: '#FFD600', color: 'black' }}
+                  onClick={handleIrCarrito}
                 >
                   Pagar
                 </button>

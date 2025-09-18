@@ -120,7 +120,7 @@ function PaginaPrincipal() {
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
-                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><Link className="dropdown-item" to="/MisPedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>

@@ -20,11 +20,10 @@ import 'bootstrap-icons/font/bootstrap-icons.css';
 import Contacto from './Pages/Contacto/contacto';
 import Ofertas from './Pages/ofertas/ofertas.js';
 import { CarritoProvider } from './Pages/components/CarritoContext.js';
-import CarritoPagos from './Pages/Pagos/CarritoPagos.js';
-import MetodosPagos from './Pages/Pagos/MetodosPagos.js';
-import PagosNequi from './Pages/Pagos/PagosNequi.js';
 import Perfil from './Pages/perfil/perfil.js';
-
+import MisPedidos from './MisPedidos/MisPEdidos.js';
+import Carrito from './Pages/Carrito/Carrito.js';
+import Checkout from './Pages/Checkout/Checkout.js';
 function App() {
   return (
     <BrowserRouter>
@@ -44,8 +43,6 @@ function App() {
           <Route path="/Verduras" element={<Verduras />} />
           <Route path="/contacto" element={<Contacto />} />
           <Route path="/Medicamentos" element={<Medicamentos />} />
-          <Route path="/CarritoPagos" element={<CarritoPagos />} />
-                    <Route path="/PagosNequi" element={<PagosNequi />} />
 
 
 
@@ -55,7 +52,10 @@ function App() {
           <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
           <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
           <Route path="/perfil" element={<ProtectedRoute> <Perfil /> </ProtectedRoute>} />
-          <Route path="/MetodosPagos" element={<ProtectedRoute> <MetodosPagos /> </ProtectedRoute>} />
+                    <Route path="/MisPedidos" element={<ProtectedRoute> <MisPedidos /> </ProtectedRoute>} />
+                    <Route path="/Checkout" element={<ProtectedRoute> <Checkout /> </ProtectedRoute>} />
+                    <Route path="/Carrito" element={<ProtectedRoute> <Carrito /> </ProtectedRoute>} />
+
 
           
 

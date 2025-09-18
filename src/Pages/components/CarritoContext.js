@@ -1,88 +1,55 @@
-// src/context/CarritoContext.js
-// Crea esta carpeta y archivo: src/context/CarritoContext.js
-import { createContext, useContext, useState, useEffect } from 'react';
-import Swal from 'sweetalert2';
+import { createContext, useContext, useState } from "react";
 
 const CarritoContext = createContext();
 
-export const useCarrito = () => {
-  const context = useContext(CarritoContext);
-  if (!context) {
-    throw new Error('useCarrito debe ser usado dentro de CarritoProvider');
-  }
-  return context;
-};
-
 export const CarritoProvider = ({ children }) => {
-  // Cargar carrito desde localStorage al inicializar
-  const [carrito, setCarrito] = useState(() => {
-    try {
-      const carritoGuardado = localStorage.getItem('carrito');
-      return carritoGuardado ? JSON.parse(carritoGuardado) : [];
-    } catch (error) {
-      console.error('Error al cargar carrito desde localStorage:', error);
-      return [];
-    }
-  });
-
+  const [carrito, setCarrito] = useState([]);
   const [mostrarCarrito, setMostrarCarrito] = useState(false);
 
-  // Guardar carrito en localStorage cada vez que cambie
-  useEffect(() => {
-    try {
-      localStorage.setItem('carrito', JSON.stringify(carrito));
-    } catch (error) {
-      console.error('Error al guardar carrito en localStorage:', error);
-    }
-  }, [carrito]);
-
   const agregarAlCarrito = (producto) => {
-    const existe = carrito.find((item) => item.nombre === producto.nombre);
-    if (existe) {
-      setCarrito(
-        carrito.map((item) =>
+    setCarrito((prev) => {
+      const productoExistente = prev.find((item) => item.nombre === producto.nombre);
+      if (productoExistente) {
+        return prev.map((item) =>
           item.nombre === producto.nombre
             ? { ...item, cantidad: item.cantidad + producto.cantidad }
             : item
-        )
-      );
-    } else {
-      setCarrito([...carrito, { ...producto }]);
-    }
-    
-    Swal.fire({
-      toast: true,
-      position: 'top-end',
-      icon: 'success',
-      title: `${producto.nombre} agregado al carrito`,
-      showConfirmButton: false,
-      timer: 1500,
+        );
+      } else {
+        return [...prev, producto];
+      }
     });
   };
 
   const eliminarDelCarrito = (nombre) => {
-    setCarrito(carrito.filter((item) => item.nombre !== nombre));
+    setCarrito((prev) => prev.filter((item) => item.nombre !== nombre));
   };
 
-  const limpiarCarrito = () => {
+  const vaciarCarrito = () => {
     setCarrito([]);
   };
 
-  const totalCarrito = carrito.reduce((acc, item) => acc + item.precio * item.cantidad, 0);
-
-  const value = {
-    carrito,
-    mostrarCarrito,
-    setMostrarCarrito,
-    agregarAlCarrito,
-    eliminarDelCarrito,
-    limpiarCarrito,
-    totalCarrito
-  };
+  const totalCarrito = carrito.reduce(
+    (acc, item) => acc + item.precio * item.cantidad,
+    0
+  );
 
   return (
-    <CarritoContext.Provider value={value}>
+    <CarritoContext.Provider
+      value={{
+        carrito,
+        mostrarCarrito,
+        setMostrarCarrito,
+        agregarAlCarrito,
+        eliminarDelCarrito,
+        vaciarCarrito,
+        totalCarrito,
+      }}
+    >
       {children}
     </CarritoContext.Provider>
   );
 };
+
+// 🔹 Hook personalizado que sí se puede importar con { useCarrito }
+export const useCarrito = () => useContext(CarritoContext);

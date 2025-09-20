@@ -1,7 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
-import { auth, } from '../../Firebase';
+import { auth } from '../../Firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -12,14 +12,14 @@ function Verduras() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Contexto del carrito
-  const { 
-    carrito, 
-    mostrarCarrito, 
-    setMostrarCarrito, 
-    agregarAlCarrito, 
-    eliminarDelCarrito, 
-    totalCarrito 
+  // Contexto carrito
+  const {
+    carrito,
+    mostrarCarrito,
+    setMostrarCarrito,
+    agregarAlCarrito,
+    eliminarDelCarrito,
+    totalCarrito
   } = useCarrito();
 
   // Detectar usuario logueado
@@ -30,7 +30,7 @@ function Verduras() {
     return () => unsubscribe();
   }, []);
 
-  // Productos disponibles
+  // Productos
   const [productos, setProductos] = useState([
     { nombre: "Mazorca", desc: "Mazorca fresca", src: "/imagenesProductos/mazorca.webp", precio: 1200, cantidad: 1 },
     { nombre: "Lechuga", desc: "Lechuga crocante", src: "/imagenesProductos/lechuga.webp", precio: 2000, cantidad: 1 },
@@ -50,31 +50,43 @@ function Verduras() {
     { nombre: "Platano", desc: "Plátano maduro", src: "/imagenesProductos/platano.png", precio: 4700, cantidad: 1 },
   ]);
 
-  // 🔍 Filtrar productos
+  // Filtrar productos
   const productosFiltrados = productos.filter((prod) =>
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      Swal.fire('Atención', 'Por favor ingresa un término para buscar.', 'info');
-      return;
-    }
-    Swal.fire(`Buscando productos para: "${searchTerm}"`);
+  // Cerrar sesión con confirmación
+  const handleLogout = () => {
+    Swal.fire({
+      title: '¿Cerrar sesión?',
+      text: '¿Estás seguro de que quieres cerrar sesión?',
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonColor: '#d33',
+      cancelButtonColor: '#3085d6',
+      confirmButtonText: 'Sí, cerrar sesión',
+      cancelButtonText: 'Cancelar',
+    }).then((result) => {
+      if (result.isConfirmed) {
+        signOut(auth).then(() => navigate('/'));
+      }
+    });
   };
 
-  const handleLogout = async () => {
-    await signOut(auth);
-    navigate("/");
-  };
-
-  // Cambiar cantidad siempre >= 1
+  // Cambiar cantidad
   const handleCantidadChange = (index, nuevaCantidad) => {
     const productosActualizados = [...productos];
-    const cantidadValida = Math.max(1, parseInt(nuevaCantidad) || 1);
-    productosActualizados[index].cantidad = cantidadValida;
+    productosActualizados[index].cantidad = parseInt(nuevaCantidad) || 1;
     setProductos(productosActualizados);
+  };
+
+  // Ir a carrito
+  const handleIrCarrito = () => {
+    if (carrito.length === 0) {
+      Swal.fire("Carrito vacío", "Agrega productos antes de pagar", "warning");
+      return;
+    }
+    navigate("/Carrito");
   };
 
   return (
@@ -86,12 +98,13 @@ function Verduras() {
           <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain">
             <span className="navbar-toggler-icon" />
           </button>
+
           <div className="collapse navbar-collapse" id="navbarMain">
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
-                <a className="nav-link dropdown-toggle" href="#" id="productosDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">Productos</a>
-                <ul className="dropdown-menu" aria-labelledby="productosDropdown">
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Productos</a>
+                <ul className="dropdown-menu">
                   <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
                   <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
@@ -107,42 +120,35 @@ function Verduras() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
-            <form className="d-flex me-3" onSubmit={handleSearch}>
-              <input 
-                className="form-control me-2" 
-                type="search" 
-                placeholder="Buscar productos" 
-                value={searchTerm} 
-                onChange={(e) => setSearchTerm(e.target.value)} 
+
+            {/* Buscador */}
+            <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
+              <input
+                className="form-control me-2"
+                type="search"
+                placeholder="Buscar productos"
+                value={searchTerm}
+                onChange={(e) => setSearchTerm(e.target.value)}
               />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
 
-            {/* Usuario / Sesión */}
+            {/* Usuario */}
             {user ? (
               <div className="dropdown">
-                <button
-                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
-                  type="button"
-                  id="userDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#fff', color: 'black' }}
+                  type="button" data-bs-toggle="dropdown">
                   {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt="Avatar"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
-                    />
+                    <img src={user.photoURL} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
                   ) : (
                     <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
                   )}
                   {user.displayName || "Usuario"}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <ul className="dropdown-menu dropdown-menu-end">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
-                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><Link className="dropdown-item" to="/MisPedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>
@@ -154,7 +160,7 @@ function Verduras() {
         </div>
       </nav>
 
-      {/* Sección Verduras */}
+      {/* Productos */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Verduras</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -162,14 +168,11 @@ function Verduras() {
             productosFiltrados.map((prod, i) => (
               <div key={i} className="col">
                 <div className="card h-100 shadow-sm d-flex flex-column">
-                  <img src={prod.src} className="card-img-top" alt={`Imagen de ${prod.nombre}`} style={{ height: '180px', objectFit: 'contain' }} />
+                  <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{prod.nombre}</h5>
                     <p className="card-text">{prod.desc}</p>
-                    <div className="mb-2">
-                      <strong>Precio:</strong>{" "}
-                      {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
-                    </div>
+                    <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                     <div className="d-flex align-items-center mb-2">
                       <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
                       <input
@@ -182,27 +185,22 @@ function Verduras() {
                       />
                     </div>
                     <div className="mt-auto d-flex justify-content-between">
-                      <button 
-                        className="btn btn-warning btn-sm" 
-                        onClick={() => agregarAlCarrito({ ...prod })}
-                      >
-                        Agregar
-                      </button>
+                      <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                     </div>
                   </div>
                 </div>
               </div>
             ))
           ) : (
-            <p className="text-center">No se encontraron productos para tu búsqueda.</p>
+            <p className="text-center">No se encontraron productos</p>
           )}
         </div>
       </section>
 
-      {/* Botón flotante del carrito */}
+      {/* Botón flotante carrito */}
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
-        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
         onClick={() => setMostrarCarrito(!mostrarCarrito)}
       >
         🛒
@@ -215,8 +213,7 @@ function Verduras() {
 
       {/* Carrito flotante */}
       {mostrarCarrito && (
-        <div
-          className="position-fixed bg-light border p-3 shadow-lg"
+        <div className="position-fixed bg-light border p-3 shadow-lg"
           style={{
             bottom: '90px',
             right: '20px',
@@ -227,30 +224,37 @@ function Verduras() {
             zIndex: 1000
           }}
         >
-          <h5 className="text-center">Carrito De Compras</h5>
+          <h5 className="text-center"> Carrito De Compras</h5>
           {carrito.length === 0 ? (
             <p className="text-center">Carrito vacío</p>
           ) : (
             <>
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
-                  <div>
-                    <strong>{item.nombre}</strong>
-                    <br />
-                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  <div className="d-flex align-items-center">
+                    <img
+                      src={item.src}
+                      alt={item.nombre}
+                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }}
+                    />
+                    <div>
+                      <strong>{item.nombre}</strong>
+                      <br />
+                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                    </div>
                   </div>
-                  <button 
-                    className="btn btn-sm btn-dark" 
-                    onClick={() => eliminarDelCarrito(item.nombre)} 
-                    style={{backgroundColor: '#FFD600'}}
-                  >
-                    🗑
-                  </button>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn btn-dark w-100" style={{backgroundColor:'#FFD600', color:'black'}}>Pagar</button>
+                <button
+                  className="btn btn-dark w-100"
+                  style={{ backgroundColor: '#FFD600', color: 'black' }}
+                  onClick={handleIrCarrito}
+                >
+                  Pagar
+                </button>
               </div>
             </>
           )}

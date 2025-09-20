@@ -29,6 +29,7 @@ function Aseo() {
     return () => unsubscribe();
   }, []);
 
+  // Lista de productos Aseo
   const [productos, setProductos] = useState([
     { nombre: "Clorox", desc: "Clorox", src: "/imagenesProductos/cloroxxx.webp", precio: 6500, cantidad: 1 },
     { nombre: "Ariel", desc: "Ariel", src: "/imagenesProductos/ariel.png", precio: 29000, cantidad: 1 },
@@ -89,6 +90,12 @@ function Aseo() {
     const productosActualizados = [...productos];
     productosActualizados[index].cantidad = cantidad;
     setProductos(productosActualizados);
+  };
+
+  // ✅ Igual que en Frutas
+  const handleIrCarrito = () => {
+    setMostrarCarrito(false);
+    navigate('/Carrito');
   };
 
   return (
@@ -164,10 +171,9 @@ function Aseo() {
         </div>
       </nav>
 
-
       {/* Sección Aseo */}
       <section className="container py-5">
-        <h2 className="mb-4 text-center">Seccion Aseo</h2>
+        <h2 className="mb-4 text-center">Sección Aseo</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
           {productosFiltrados.length > 0 ? (
             productosFiltrados.map((prod, i) => (
@@ -239,7 +245,12 @@ function Aseo() {
             <>
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
-                  <div>
+                  <img
+                    src={item.src}
+                    alt={item.nombre}
+                    style={{ width: '40px', height: '40px', objectFit: 'contain', marginRight: '10px' }}
+                  />
+                  <div className="flex-grow-1">
                     <strong>{item.nombre}</strong>
                     <br />
                     {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
@@ -249,7 +260,7 @@ function Aseo() {
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn btn-dark w-100" style={{ backgroundColor: '#FFD600', color: 'black' }}>Pagar</button>
+                <button className="btn btn-dark w-100" style={{ backgroundColor: '#FFD600', color: 'black' }} onClick={handleIrCarrito}>Pagar</button>
               </div>
             </>
           )}

@@ -2,7 +2,7 @@ import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { auth } from '../../Firebase';
-import { onAuthStateChanged } from 'firebase/auth';
+import { onAuthStateChanged, signOut } from 'firebase/auth';
 import { useCarrito } from '../components/CarritoContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
@@ -58,6 +58,11 @@ function Medicamentos() {
     Swal.fire(`Buscando productos para: "${searchTerm}"`);
   };
 
+  const handleCantidadChange = (index, value) => {
+    if (value < 1) return;
+    productos[index].cantidad = value;
+  };
+
   const handleLogout = () => {
     Swal.fire({
       title: '¿Cerrar sesión?',
@@ -70,10 +75,14 @@ function Medicamentos() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        auth.signOut();
+        signOut(auth);
         navigate('/');
       }
     });
+  };
+
+  const handleIrCarrito = () => {
+    navigate('/Carrito');
   };
 
   return (
@@ -89,8 +98,8 @@ function Medicamentos() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
-                <button className="nav-link dropdown-toggle btn btn-link" id="productosDropdown" data-bs-toggle="dropdown" aria-expanded="false">Productos</button>
-                <ul className="dropdown-menu" aria-labelledby="productosDropdown">
+                <button className="nav-link dropdown-toggle btn btn-link" id="productosDropdown" data-bs-toggle="dropdown">Productos</button>
+                <ul className="dropdown-menu">
                   <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
                   <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
                   <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
@@ -107,33 +116,25 @@ function Medicamentos() {
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
             <form className="d-flex me-3" onSubmit={handleSearch}>
-              <input className="form-control me-2" type="search" placeholder="Buscar productos" value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
+              <input className="form-control me-2" type="search" placeholder="Buscar productos"
+                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
 
-            {/* Menú de usuario igual que en PaginaPrincipal */}
             {user ? (
               <div className="dropdown">
-                <button
-                  className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                  style={{ backgroundColor: '#ffffffff', color: 'black' }}
-                  type="button"
-                  id="userDropdown"
-                  data-bs-toggle="dropdown"
-                  aria-expanded="false"
-                >
+                <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
+                  style={{ backgroundColor: '#fff', color: 'black' }}
+                  type="button" id="userDropdown" data-bs-toggle="dropdown">
                   {user.photoURL ? (
-                    <img
-                      src={user.photoURL}
-                      alt="Avatar"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }}
-                    />
+                    <img src={user.photoURL} alt="Avatar"
+                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
                   ) : (
                     <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
                   )}
                   {user.displayName || "Usuario"}
                 </button>
-                <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                <ul className="dropdown-menu dropdown-menu-end">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
                   <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
@@ -155,24 +156,21 @@ function Medicamentos() {
             productosFiltrados.map((prod, i) => (
               <div key={i} className="col">
                 <div className="card h-100 shadow-sm d-flex flex-column">
-                  <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
+                  <img src={prod.src} className="card-img-top" alt={prod.nombre}
+                    style={{ height: '180px', objectFit: 'contain' }} />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{prod.nombre}</h5>
                     <p className="card-text">{prod.desc}</p>
                     <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                     <div className="d-flex align-items-center mb-2">
                       <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                      <input
-                        id={`cantidad-${i}`}
-                        type="number"
-                        min="1"
-                        defaultValue={prod.cantidad}
-                        onChange={(e) => prod.cantidad = parseInt(e.target.value)}
-                        className="form-control form-control-sm w-50"
-                      />
+                      <input id={`cantidad-${i}`} type="number" min="1" defaultValue={prod.cantidad}
+                        onChange={(e) => handleCantidadChange(i, parseInt(e.target.value))}
+                        className="form-control form-control-sm w-50" />
                     </div>
                     <div className="mt-auto d-flex justify-content-between">
-                      <button className="btn btn-warning btn-sm" type="button" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+                      <button className="btn btn-warning btn-sm" type="button"
+                        onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                     </div>
                   </div>
                 </div>
@@ -185,12 +183,9 @@ function Medicamentos() {
       </section>
 
       {/* Botón flotante del carrito */}
-      <button
-        className="btn btn-dark rounded-circle shadow-lg position-fixed"
-        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600'}}
-        type="button"
-        onClick={() => setMostrarCarrito(!mostrarCarrito)}
-      >
+      <button className="btn btn-dark rounded-circle shadow-lg position-fixed"
+        style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
+        type="button" onClick={() => setMostrarCarrito(!mostrarCarrito)}>
         🛒
         {carrito.length > 0 && (
           <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
@@ -201,18 +196,9 @@ function Medicamentos() {
 
       {/* Carrito flotante */}
       {mostrarCarrito && (
-        <div
-          className="position-fixed bg-light border p-3 shadow-lg"
-          style={{
-            bottom: '90px',
-            right: '20px',
-            width: '300px',
-            maxHeight: '400px',
-            overflowY: 'auto',
-            borderRadius: '10px',
-            zIndex: 1000
-          }}
-        >
+        <div className="position-fixed bg-light border p-3 shadow-lg"
+          style={{ bottom: '90px', right: '20px', width: '300px', maxHeight: '400px', overflowY: 'auto',
+            borderRadius: '10px', zIndex: 1000 }}>
           <h5 className="text-center">Carrito De Compras</h5>
           {carrito.length === 0 ? (
             <p className="text-center">Carrito vacío</p>
@@ -220,17 +206,25 @@ function Medicamentos() {
             <>
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
-                  <div>
-                    <strong>{item.nombre}</strong>
-                    <br />
-                    {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                  <div className="d-flex align-items-center">
+                    <img src={item.src} alt={item.nombre}
+                      style={{ width: '40px', height: '40px', objectFit: 'cover', marginRight: '10px' }} />
+                    <div>
+                      <strong>{item.nombre}</strong>
+                      <br />
+                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                    </div>
                   </div>
-                  <button className="btn btn-sm" type="button" onClick={() => eliminarDelCarrito(item.nombre)} style={{backgroundColor: '#FFD600'}}>🗑</button>
+                  <button className="btn btn-sm" type="button"
+                    onClick={() => eliminarDelCarrito(item.nombre)}
+                    style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn w-100" type="button" style={{backgroundColor:'#FFD600', color:'black'}}>Pagar</button>
+                <button className="btn w-100" type="button"
+                  style={{ backgroundColor: '#FFD600', color: 'black' }}
+                  onClick={handleIrCarrito}>Pagar</button>
               </div>
             </>
           )}

@@ -15,10 +15,11 @@ function Alcohol() {
   const {
     carrito,
     mostrarCarrito,
-    setMostrarCarrito,
     agregarAlCarrito,
     eliminarDelCarrito,
-    totalCarrito
+    totalCarrito,
+    actualizarCantidad, // ✅ ahora sí usamos la del context
+    toggleCarrito       // ✅ para abrir/cerrar carrito flotante
   } = useCarrito();
 
   // Detectar usuario logueado
@@ -63,7 +64,7 @@ function Alcohol() {
     });
   };
 
-  // Cambiar cantidad
+  // Cambiar cantidad en sección productos
   const handleCantidadChange = (index, nuevaCantidad) => {
     const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     const productosActualizados = [...productos];
@@ -192,7 +193,7 @@ function Alcohol() {
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
-        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+        onClick={toggleCarrito} // ✅ ya no usamos setMostrarCarrito
       >
         🛒
         {carrito.length > 0 && (
@@ -231,9 +232,33 @@ function Alcohol() {
                     <div>
                       <strong>{item.nombre}</strong>
                       <br />
-                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                      <div className="d-flex align-items-center">
+                        {/* Botón disminuir */}
+                        <button
+                          className="btn btn-sm btn-outline-dark me-2"
+                          onClick={() =>
+                            item.cantidad > 1
+                              ? actualizarCantidad(item.nombre, item.cantidad - 1)
+                              : eliminarDelCarrito(item.nombre)
+                          }
+                        >
+                          ➖
+                        </button>
+
+                        <span>{item.cantidad}</span>
+
+                        {/* Botón aumentar */}
+                        <button
+                          className="btn btn-sm btn-outline-dark ms-2"
+                          onClick={() => actualizarCantidad(item.nombre, item.cantidad + 1)}
+                        >
+                          ➕
+                        </button>
+                      </div>
+                      <small>{item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} c/u</small>
                     </div>
                   </div>
+                  {/* Botón eliminar */}
                   <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
@@ -244,7 +269,7 @@ function Alcohol() {
                   style={{ backgroundColor: '#FFD600', color: 'black' }}
                   onClick={handleIrCarrito}
                 >
-                  Pagar
+                  Hacer Pedido
                 </button>
               </div>
             </>

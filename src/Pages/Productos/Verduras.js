@@ -12,14 +12,15 @@ function Verduras() {
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Contexto carrito
+  // Contexto carrito (ajustado al de Aseo)
   const {
     carrito,
     mostrarCarrito,
-    setMostrarCarrito,
     agregarAlCarrito,
     eliminarDelCarrito,
-    totalCarrito
+    totalCarrito,
+    actualizarCantidad,
+    toggleCarrito
   } = useCarrito();
 
   // Detectar usuario logueado
@@ -30,7 +31,7 @@ function Verduras() {
     return () => unsubscribe();
   }, []);
 
-  // Productos
+  // Lista productos
   const [productos, setProductos] = useState([
     { nombre: "Mazorca", desc: "Mazorca fresca", src: "/imagenesProductos/mazorca.webp", precio: 1200, cantidad: 1 },
     { nombre: "Lechuga", desc: "Lechuga crocante", src: "/imagenesProductos/lechuga.webp", precio: 2000, cantidad: 1 },
@@ -55,7 +56,7 @@ function Verduras() {
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  // Cerrar sesión con confirmación
+  // Logout
   const handleLogout = () => {
     Swal.fire({
       title: '¿Cerrar sesión?',
@@ -73,10 +74,11 @@ function Verduras() {
     });
   };
 
-  // Cambiar cantidad
+  // Cambiar cantidad productos
   const handleCantidadChange = (index, nuevaCantidad) => {
+    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     const productosActualizados = [...productos];
-    productosActualizados[index].cantidad = parseInt(nuevaCantidad) || 1;
+    productosActualizados[index].cantidad = cantidad;
     setProductos(productosActualizados);
   };
 
@@ -105,15 +107,14 @@ function Verduras() {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Productos</a>
                 <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
               </li>
               <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
@@ -201,7 +202,7 @@ function Verduras() {
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
-        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+        onClick={toggleCarrito}
       >
         🛒
         {carrito.length > 0 && (
@@ -240,7 +241,26 @@ function Verduras() {
                     <div>
                       <strong>{item.nombre}</strong>
                       <br />
-                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                      <div className="d-flex align-items-center">
+                        <button
+                          className="btn btn-sm btn-outline-dark me-2"
+                          onClick={() =>
+                            item.cantidad > 1
+                              ? actualizarCantidad(item.nombre, item.cantidad - 1)
+                              : eliminarDelCarrito(item.nombre)
+                          }
+                        >
+                          ➖
+                        </button>
+                        <span>{item.cantidad}</span>
+                        <button
+                          className="btn btn-sm btn-outline-dark ms-2"
+                          onClick={() => actualizarCantidad(item.nombre, item.cantidad + 1)}
+                        >
+                          ➕
+                        </button>
+                      </div>
+                      <small>{item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} c/u</small>
                     </div>
                   </div>
                   <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
@@ -253,7 +273,7 @@ function Verduras() {
                   style={{ backgroundColor: '#FFD600', color: 'black' }}
                   onClick={handleIrCarrito}
                 >
-                  Pagar
+                  Hacer Pedido
                 </button>
               </div>
             </>

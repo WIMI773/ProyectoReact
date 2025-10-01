@@ -15,10 +15,11 @@ function Medicamentos() {
   const {
     carrito,
     mostrarCarrito,
-    setMostrarCarrito,
     agregarAlCarrito,
     eliminarDelCarrito,
-    totalCarrito
+    totalCarrito,
+    actualizarCantidad, // ✅ para ➕ y ➖
+    toggleCarrito       // ✅ en lugar de setMostrarCarrito
   } = useCarrito();
 
   // Detectar usuario logueado
@@ -30,7 +31,7 @@ function Medicamentos() {
   }, []);
 
   // Lista de productos
-  const productos = [
+  const [productos, setProductos] = useState([
     { nombre: "Metocarbamol/Ibuprofeno", desc: "Metocarbamol/Ibuprofeno 500/200 mg", src: "/imagenesProductos/metocarbamol.png", precio: 40400, cantidad: 1 },
     { nombre: "Acetaminofen Jarabe", desc: "Acetaminofen Jarabe 90 ml", src: "/imagenesProductos/acetaminofen jarabe.webp", precio: 7400, cantidad: 1 },
     { nombre: "Vita C", desc: "Vita C 500 mg", src: "/imagenesProductos/Vita c.png", precio: 51200, cantidad: 1 },
@@ -43,26 +44,22 @@ function Medicamentos() {
     { nombre: "Buscapina", desc: "Buscapina 10 mg", src: "/imagenesProductos/buscapina.webp", precio: 32900, cantidad: 1 },
     { nombre: "Loperamida", desc: "Loperamida 2 mg", src: "/imagenesProductos/loperamida.webp", precio: 10900, cantidad: 1 },
     { nombre: "Acetaminofen Forte", desc: "Acetaminofen Forte 500 mg", src: "/imagenesProductos/acetaminofen forte.png", precio: 10300, cantidad: 1 },
-  ];
+  ]);
 
+  // Filtrar productos
   const productosFiltrados = productos.filter((prod) =>
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
-  const handleSearch = (e) => {
-    e.preventDefault();
-    if (!searchTerm.trim()) {
-      Swal.fire('Atención', 'Por favor ingresa un término para buscar.', 'info');
-      return;
-    }
-    Swal.fire(`Buscando productos para: "${searchTerm}"`);
+  // Cambiar cantidad antes de agregar al carrito
+  const handleCantidadChange = (index, nuevaCantidad) => {
+    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
+    const productosActualizados = [...productos];
+    productosActualizados[index].cantidad = cantidad;
+    setProductos(productosActualizados);
   };
 
-  const handleCantidadChange = (index, value) => {
-    if (value < 1) return;
-    productos[index].cantidad = value;
-  };
-
+  // Cerrar sesión
   const handleLogout = () => {
     Swal.fire({
       title: '¿Cerrar sesión?',
@@ -75,14 +72,18 @@ function Medicamentos() {
       cancelButtonText: 'Cancelar',
     }).then((result) => {
       if (result.isConfirmed) {
-        signOut(auth);
-        navigate('/');
+        signOut(auth).then(() => navigate('/'));
       }
     });
   };
 
+  // Ir al carrito
   const handleIrCarrito = () => {
-    navigate('/Carrito');
+    if (carrito.length === 0) {
+      Swal.fire("Carrito vacío", "Agrega productos antes de pagar", "warning");
+      return;
+    }
+    navigate("/Carrito");
   };
 
   return (
@@ -98,11 +99,11 @@ function Medicamentos() {
             <ul className="navbar-nav me-auto mb-2 mb-lg-0">
               <li className="nav-item"><Link className="nav-link active" to="/PaginaPrincipal">Inicio</Link></li>
               <li className="nav-item dropdown">
-                <button className="nav-link dropdown-toggle btn btn-link" id="productosDropdown" data-bs-toggle="dropdown">Productos</button>
+                <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Productos</a>
                 <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
@@ -115,20 +116,22 @@ function Medicamentos() {
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
-            <form className="d-flex me-3" onSubmit={handleSearch}>
+
+            {/* 🔍 Buscador */}
+            <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
               <input className="form-control me-2" type="search" placeholder="Buscar productos"
                 value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
 
+            {/* 👤 Usuario */}
             {user ? (
               <div className="dropdown">
                 <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
                   style={{ backgroundColor: '#fff', color: 'black' }}
-                  type="button" id="userDropdown" data-bs-toggle="dropdown">
+                  type="button" data-bs-toggle="dropdown">
                   {user.photoURL ? (
-                    <img src={user.photoURL} alt="Avatar"
-                      style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
+                    <img src={user.photoURL} alt="Avatar" style={{ width: '30px', height: '30px', borderRadius: '50%', marginRight: '8px' }} />
                   ) : (
                     <i className="bi bi-person-circle" style={{ fontSize: '1.5rem', marginRight: '8px' }}></i>
                   )}
@@ -136,7 +139,7 @@ function Medicamentos() {
                 </button>
                 <ul className="dropdown-menu dropdown-menu-end">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
-                  <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                  <li><Link className="dropdown-item" to="/MisPedidos">Mis Pedidos</Link></li>
                   <li><hr className="dropdown-divider" /></li>
                   <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>
@@ -156,21 +159,24 @@ function Medicamentos() {
             productosFiltrados.map((prod, i) => (
               <div key={i} className="col">
                 <div className="card h-100 shadow-sm d-flex flex-column">
-                  <img src={prod.src} className="card-img-top" alt={prod.nombre}
-                    style={{ height: '180px', objectFit: 'contain' }} />
+                  <img src={prod.src} className="card-img-top" alt={prod.nombre} style={{ height: '180px', objectFit: 'contain' }} />
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{prod.nombre}</h5>
                     <p className="card-text">{prod.desc}</p>
                     <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
                     <div className="d-flex align-items-center mb-2">
                       <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                      <input id={`cantidad-${i}`} type="number" min="1" defaultValue={prod.cantidad}
-                        onChange={(e) => handleCantidadChange(i, parseInt(e.target.value))}
-                        className="form-control form-control-sm w-50" />
+                      <input
+                        id={`cantidad-${i}`}
+                        type="number"
+                        min="1"
+                        value={prod.cantidad}
+                        onChange={(e) => handleCantidadChange(i, e.target.value)}
+                        className="form-control form-control-sm w-50"
+                      />
                     </div>
                     <div className="mt-auto d-flex justify-content-between">
-                      <button className="btn btn-warning btn-sm" type="button"
-                        onClick={() => agregarAlCarrito(prod)}>Agregar</button>
+                      <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
                     </div>
                   </div>
                 </div>
@@ -182,10 +188,12 @@ function Medicamentos() {
         </div>
       </section>
 
-      {/* Botón flotante del carrito */}
-      <button className="btn btn-dark rounded-circle shadow-lg position-fixed"
+      {/* 🛒 Botón flotante del carrito */}
+      <button
+        className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
-        type="button" onClick={() => setMostrarCarrito(!mostrarCarrito)}>
+        onClick={toggleCarrito}
+      >
         🛒
         {carrito.length > 0 && (
           <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
@@ -194,11 +202,11 @@ function Medicamentos() {
         )}
       </button>
 
-      {/* Carrito flotante */}
+      {/* 🛒 Carrito flotante */}
       {mostrarCarrito && (
         <div className="position-fixed bg-light border p-3 shadow-lg"
-          style={{ bottom: '90px', right: '20px', width: '300px', maxHeight: '400px', overflowY: 'auto',
-            borderRadius: '10px', zIndex: 1000 }}>
+          style={{ bottom: '90px', right: '20px', width: '300px', maxHeight: '400px', overflowY: 'auto', borderRadius: '10px', zIndex: 1000 }}
+        >
           <h5 className="text-center">Carrito De Compras</h5>
           {carrito.length === 0 ? (
             <p className="text-center">Carrito vacío</p>
@@ -207,24 +215,38 @@ function Medicamentos() {
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
                   <div className="d-flex align-items-center">
-                    <img src={item.src} alt={item.nombre}
-                      style={{ width: '40px', height: '40px', objectFit: 'cover', marginRight: '10px' }} />
+                    <img src={item.src} alt={item.nombre} style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }} />
                     <div>
                       <strong>{item.nombre}</strong>
                       <br />
-                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                      <div className="d-flex align-items-center">
+                        <button
+                          className="btn btn-sm btn-outline-dark me-2"
+                          onClick={() =>
+                            item.cantidad > 1
+                              ? actualizarCantidad(item.nombre, item.cantidad - 1)
+                              : eliminarDelCarrito(item.nombre)
+                          }
+                        >
+                          ➖
+                        </button>
+                        <span>{item.cantidad}</span>
+                        <button
+                          className="btn btn-sm btn-outline-dark ms-2"
+                          onClick={() => actualizarCantidad(item.nombre, item.cantidad + 1)}
+                        >
+                          ➕
+                        </button>
+                      </div>
+                      <small>{item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} c/u</small>
                     </div>
                   </div>
-                  <button className="btn btn-sm" type="button"
-                    onClick={() => eliminarDelCarrito(item.nombre)}
-                    style={{ backgroundColor: '#FFD600' }}>🗑</button>
+                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button className="btn w-100" type="button"
-                  style={{ backgroundColor: '#FFD600', color: 'black' }}
-                  onClick={handleIrCarrito}>Pagar</button>
+                <button className="btn btn-dark w-100" style={{ backgroundColor: '#FFD600', color: 'black' }} onClick={handleIrCarrito}>Hacer Pedido</button>
               </div>
             </>
           )}

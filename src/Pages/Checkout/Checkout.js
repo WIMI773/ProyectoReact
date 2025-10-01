@@ -251,11 +251,19 @@ function Checkout() {
         </div>
 
         <button
-          className="btn btn-success w-100"
+          className="btn btn w-100" style={{backgroundColor:'#FFD600', }}
           onClick={confirmarPedido}
           disabled={loading}
         >
-          {loading ? "Confirmando pedido..." : "Confirmar Pedido ✅"}
+          {loading ? "Confirmando pedido..." : "Confirmar Pedido "}
+        </button>
+
+        {/* 🔹 Botón Volver */}
+        <button
+          className="btn btn w-100 mt-3 " style={{backgroundColor:'#c5c5c5ec'}}
+          onClick={() => navigate(-1)}
+        >
+          Volver
         </button>
       </div>
     </>

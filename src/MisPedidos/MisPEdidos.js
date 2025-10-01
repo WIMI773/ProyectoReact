@@ -11,15 +11,14 @@ import {
   serverTimestamp,
 } from "firebase/firestore";
 import { onAuthStateChanged } from "firebase/auth";
-import { db } from "../Firebase";
-import { auth } from "../Firebase";
+import { db, auth } from "../Firebase";
 import Swal from "sweetalert2";
-import { useNavigate } from "react-router-dom";  // ✅ Importar hook de navegación
+import { useNavigate } from "react-router-dom";
 
 function MisPedidos() {
   const [pedidos, setPedidos] = useState([]);
   const [user, setUser] = useState(null);
-  const navigate = useNavigate(); // ✅ Inicializar navegación
+  const navigate = useNavigate();
 
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (currentUser) => {
@@ -50,7 +49,6 @@ function MisPedidos() {
     }
   };
 
-  // 🔴 Eliminar pedido con confirmación
   const eliminarPedido = async (pedidoId) => {
     Swal.fire({
       title: "¿Eliminar pedido?",
@@ -75,7 +73,6 @@ function MisPedidos() {
     });
   };
 
-  // 🟢 Confirmar y guardar un pedido en Firestore
   const confirmarPedido = async () => {
     if (!user) {
       Swal.fire("Debes iniciar sesión", "Inicia sesión para confirmar un pedido", "warning");
@@ -86,7 +83,7 @@ function MisPedidos() {
       const nuevoPedido = {
         userId: user.uid,
         estado: "Pendiente",
-        total: 50000, // 🔴 aquí puedes poner el total real
+        total: 50000,
         items: [
           {
             nombre: "Producto de ejemplo",
@@ -104,83 +101,107 @@ function MisPedidos() {
 
       Swal.fire("Pedido confirmado", "Tu pedido fue registrado correctamente", "success");
 
-      // ✅ Redirigir automáticamente al Checkout con el id del pedido
       navigate(`/Checkout/${docRef.id}`);
-
     } catch (error) {
       console.error("Error al confirmar pedido:", error);
       Swal.fire("Error", "No se pudo confirmar el pedido", "error");
     }
   };
 
+  // 🔹 Badge dinámico según estado
+  const badgeEstado = (estado) => {
+    switch (estado) {
+      case "Pendiente":
+        return <span className="badge bg-warning text-dark">{estado}</span>;
+      case "En camino":
+        return <span className="badge bg-info text-dark">{estado}</span>;
+      case "Entregado":
+        return <span className="badge bg-success">{estado}</span>;
+      case "Cancelado":
+        return <span className="badge bg-danger">{estado}</span>;
+      default:
+        return <span className="badge bg-secondary">{estado}</span>;
+    }
+  };
+
   return (
     <div className="container py-5">
-      <h2 className="mb-4 text-center">Mis Pedidos</h2>
+      <h2 className="mb-4 text-center fw-bold">📦 Mis Pedidos</h2>
 
-      {/* 🔹 Botón para confirmar un nuevo pedido */}
       <div className="text-center mb-4">
-        <button className="btn btn-primary" onClick={confirmarPedido}>
-          Confirmar Pedido 🛒
-        </button>
+        
       </div>
 
       {pedidos.length === 0 ? (
-        <p className="text-center">No tienes pedidos aún.</p>
+        <div className="alert alert-info text-center">
+          Aún no tienes pedidos registrados.
+        </div>
       ) : (
-        pedidos.map((pedido) => (
-          <div key={pedido.id} className="card mb-3 shadow-sm">
-            <div className="card-body">
-              <h5>Pedido ID: {pedido.id}</h5>
-              <p>Estado: {pedido.estado}</p>
-              <p>
-                Total:{" "}
-                {pedido.total.toLocaleString("es-CO", {
-                  style: "currency",
-                  currency: "COP",
-                })}
-              </p>
-              <p>Productos:</p>
-              <ul className="list-unstyled">
-                {pedido.items.map((item, i) => (
-                  <li key={i} className="d-flex align-items-center mb-2">
-                    <img
-                      src={item.src || "https://via.placeholder.com/60"}
-                      alt={item.nombre}
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        objectFit: "cover",
-                        marginRight: "10px",
-                        borderRadius: "8px",
-                      }}
-                    />
-                    <div>
-                      {item.nombre} - {item.cantidad} x{" "}
-                      {item.precio.toLocaleString("es-CO", {
-                        style: "currency",
-                        currency: "COP",
-                      })}
-                    </div>
-                  </li>
-                ))}
-              </ul>
-              <p>
-                Fecha:{" "}
-                {pedido.fecha?.toDate
-                  ? pedido.fecha.toDate().toLocaleString()
-                  : "Pendiente"}
-              </p>
+        <div className="row">
+          {pedidos.map((pedido) => (
+            <div key={pedido.id} className="col-md-6 mb-4">
+              <div className="card shadow-sm border-0 h-100">
+                <div className="card-body">
+                  <div className="d-flex justify-content-between align-items-center mb-3">
+                    <h5 className="fw-bold mb-0">Pedido #{pedido.id.slice(0, 6)}</h5>
+                    {badgeEstado(pedido.estado)}
+                  </div>
 
-              {/* Botón Eliminar */}
-              <button
-                className="btn btn-danger btn-sm"
-                onClick={() => eliminarPedido(pedido.id)}
-              >
-                Eliminar Pedido 🗑
-              </button>
+                  <p className="mb-1">
+                    <strong>Total:</strong>{" "}
+                    {pedido.total.toLocaleString("es-CO", {
+                      style: "currency",
+                      currency: "COP",
+                    })}
+                  </p>
+                  <p className="mb-2">
+                    <strong>Fecha:</strong>{" "}
+                    {pedido.fecha?.toDate
+                      ? pedido.fecha.toDate().toLocaleString()
+                      : "Pendiente"}
+                  </p>
+
+                  <h6 className="fw-bold mt-3">🛒 Productos</h6>
+                  <ul className="list-unstyled">
+                    {pedido.items.map((item, i) => (
+                      <li key={i} className="d-flex align-items-center mb-2">
+                        <img
+                          src={item.src || "https://via.placeholder.com/60"}
+                          alt={item.nombre}
+                          style={{
+                            width: "60px",
+                            height: "60px",
+                            objectFit: "cover",
+                            marginRight: "10px",
+                            borderRadius: "8px",
+                          }}
+                        />
+                        <div>
+                          <span className="fw-bold">{item.nombre}</span> <br />
+                          {item.cantidad} x{" "}
+                          {item.precio.toLocaleString("es-CO", {
+                            style: "currency",
+                            currency: "COP",
+                          })}
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+
+                  <div className="d-flex justify-content-between mt-3">
+                    <button
+                      className="btn btn-outline-danger btn-sm"
+                      onClick={() => eliminarPedido(pedido.id)}
+                    >
+                      🗑 Cancelar
+                    </button>
+                    
+                  </div>
+                </div>
+              </div>
             </div>
-          </div>
-        ))
+          ))}
+        </div>
       )}
     </div>
   );

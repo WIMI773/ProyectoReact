@@ -3,23 +3,24 @@ import { useNavigate, Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import { auth } from '../../Firebase';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import { useCarrito } from '../components/CarritoContext';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import 'bootstrap/dist/js/bootstrap.bundle.min.js';
-import { useCarrito } from '../components/CarritoContext';
 
 function Frutas() {
   const [searchTerm, setSearchTerm] = useState('');
   const [user, setUser] = useState(null);
   const navigate = useNavigate();
 
-  // Contexto carrito
+  // ✅ Contexto del carrito (con las nuevas funciones)
   const {
     carrito,
     mostrarCarrito,
-    setMostrarCarrito,
     agregarAlCarrito,
     eliminarDelCarrito,
-    totalCarrito
+    totalCarrito,
+    actualizarCantidad, // ✅ para cambiar cantidades
+    toggleCarrito       // ✅ en lugar de setMostrarCarrito
   } = useCarrito();
 
   // Detectar usuario logueado
@@ -30,7 +31,7 @@ function Frutas() {
     return () => unsubscribe();
   }, []);
 
-  // Productos
+  // Lista de productos Frutas
   const [productos, setProductos] = useState([
     { nombre: "Banano", desc: "Banano", src: "/imagenesProductos/banano.png", precio: 1000, cantidad: 1 },
     { nombre: "Fresa", desc: "Fresa", src: "/imagenesProductos/fresa.png", precio: 2500, cantidad: 1 },
@@ -52,13 +53,13 @@ function Frutas() {
     { nombre: "Kiwi", desc: "Kiwi", src: "/imagenesProductos/kiwi.png", precio: 4700, cantidad: 1 },
     { nombre: "Granadilla", desc: "Granadilla", src: "/imagenesProductos/granadilla.webp", precio: 3600, cantidad: 1 },
     { nombre: "Ciruela", desc: "Ciruela", src: "/imagenesProductos/ciruela.png", precio: 3400, cantidad: 1 },
-    { nombre: "Gananbana", desc: "Gananbana", src: "/imagenesProductos/ganabana.jpg", precio: 3000, cantidad: 1 },
+    { nombre: "Guanabana", desc: "Guanabana", src: "/imagenesProductos/ganabana.jpg", precio: 3000, cantidad: 1 },
     { nombre: "Nispero", desc: "Nispero", src: "/imagenesProductos/nispero.png", precio: 2000, cantidad: 1 },
     { nombre: "Manzana", desc: "Manzana", src: "/imagenesProductos/manzana.webp", precio: 3200, cantidad: 1 },
     { nombre: "Tamarindo", desc: "Tamarindo", src: "/imagenesProductos/tamarindo.png", precio: 3000, cantidad: 1 },
   ]);
 
-  // Filtrar productos
+  // 🔍 Filtrar productos
   const productosFiltrados = productos.filter((prod) =>
     prod.nombre.toLowerCase().includes(searchTerm.toLowerCase())
   );
@@ -81,20 +82,21 @@ function Frutas() {
     });
   };
 
-  // Cambiar cantidad
+  // Cambiar cantidad en sección productos
   const handleCantidadChange = (index, nuevaCantidad) => {
+    const cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     const productosActualizados = [...productos];
-    productosActualizados[index].cantidad = parseInt(nuevaCantidad);
+    productosActualizados[index].cantidad = cantidad;
     setProductos(productosActualizados);
   };
 
-  // Ir a carrito
+  // Ir al carrito
   const handleIrCarrito = () => {
     if (carrito.length === 0) {
       Swal.fire("Carrito vacío", "Agrega productos antes de pagar", "warning");
       return;
     }
-    navigate("/Carrito"); // 👉 lleva a la página Carrito
+    navigate("/Carrito");
   };
 
   return (
@@ -113,15 +115,14 @@ function Frutas() {
               <li className="nav-item dropdown">
                 <a className="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown">Productos</a>
                 <ul className="dropdown-menu">
-                  <li><Link className="dropdown-item" to="/frutas">Frutas</Link></li>
-                  <li><Link className="dropdown-item" to="/carnes">Carnes</Link></li>
-                  <li><Link className="dropdown-item" to="/lacteos">Lácteos</Link></li>
+                  <li><Link className="dropdown-item" to="/Frutas">Frutas</Link></li>
+                  <li><Link className="dropdown-item" to="/Carnes">Carnes</Link></li>
+                  <li><Link className="dropdown-item" to="/Lacteos">Lácteos</Link></li>
                   <li><Link className="dropdown-item" to="/Alcohol">Alcohol</Link></li>
                   <li><Link className="dropdown-item" to="/Medicamentos">Medicamentos</Link></li>
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
               </li>
               <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
@@ -129,19 +130,14 @@ function Frutas() {
               <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
             </ul>
 
-            {/* Buscador */}
+            {/* 🔍 Buscador */}
             <form className="d-flex me-3" onSubmit={(e) => e.preventDefault()}>
-              <input
-                className="form-control me-2"
-                type="search"
-                placeholder="Buscar productos"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-              />
+              <input className="form-control me-2" type="search" placeholder="Buscar productos"
+                value={searchTerm} onChange={(e) => setSearchTerm(e.target.value)} />
               <button className="btn btn-warning" type="submit">Buscar</button>
             </form>
 
-            {/* Usuario */}
+            {/* 👤 Usuario */}
             {user ? (
               <div className="dropdown">
                 <button className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
@@ -168,7 +164,7 @@ function Frutas() {
         </div>
       </nav>
 
-      {/* Productos */}
+      {/* Sección Frutas */}
       <section className="container py-5">
         <h2 className="mb-4 text-center">Sección Frutas</h2>
         <div className="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
@@ -180,17 +176,15 @@ function Frutas() {
                   <div className="card-body d-flex flex-column">
                     <h5 className="card-title">{prod.nombre}</h5>
                     <p className="card-text">{prod.desc}</p>
-                    <div className="mb-2"><strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</div>
+                    <div className="mb-2">
+                      <strong>Precio:</strong> {prod.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                    </div>
                     <div className="d-flex align-items-center mb-2">
                       <label htmlFor={`cantidad-${i}`} className="me-2">Cantidad:</label>
-                      <input
-                        id={`cantidad-${i}`}
-                        type="number"
-                        min="1"
+                      <input id={`cantidad-${i}`} type="number" min="1"
                         value={prod.cantidad}
                         onChange={(e) => handleCantidadChange(i, e.target.value)}
-                        className="form-control form-control-sm w-50"
-                      />
+                        className="form-control form-control-sm w-50" />
                     </div>
                     <div className="mt-auto d-flex justify-content-between">
                       <button className="btn btn-warning btn-sm" onClick={() => agregarAlCarrito(prod)}>Agregar</button>
@@ -205,12 +199,10 @@ function Frutas() {
         </div>
       </section>
 
-      {/* Botón flotante carrito */}
-      <button
-        className="btn btn-dark rounded-circle shadow-lg position-fixed"
+      {/* 🛒 Botón flotante carrito */}
+      <button className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
-        onClick={() => setMostrarCarrito(!mostrarCarrito)}
-      >
+        onClick={toggleCarrito}>
         🛒
         {carrito.length > 0 && (
           <span className="badge bg-warning text-dark position-absolute top-0 start-100 translate-middle">
@@ -219,7 +211,7 @@ function Frutas() {
         )}
       </button>
 
-      {/* Carrito flotante */}
+      {/* 🛒 Carrito flotante */}
       {mostrarCarrito && (
         <div className="position-fixed bg-light border p-3 shadow-lg"
           style={{
@@ -230,9 +222,8 @@ function Frutas() {
             overflowY: 'auto',
             borderRadius: '10px',
             zIndex: 1000
-          }}
-        >
-          <h5 className="text-center"> Carrito De Compras</h5>
+          }}>
+          <h5 className="text-center">Carrito De Compras</h5>
           {carrito.length === 0 ? (
             <p className="text-center">Carrito vacío</p>
           ) : (
@@ -240,29 +231,35 @@ function Frutas() {
               {carrito.map((item, index) => (
                 <div key={index} className="d-flex justify-content-between align-items-center border-bottom py-2">
                   <div className="d-flex align-items-center">
-                    <img
-                      src={item.src}
-                      alt={item.nombre}
-                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }}
-                    />
+                    <img src={item.src} alt={item.nombre}
+                      style={{ width: '50px', height: '50px', objectFit: 'contain', marginRight: '10px', borderRadius: '6px' }} />
                     <div>
-                      <strong>{item.nombre}</strong>
-                      <br />
-                      {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
+                      <strong>{item.nombre}</strong><br />
+                      <div className="d-flex align-items-center">
+                        {/* ➖ disminuir */}
+                        <button className="btn btn-sm btn-outline-dark me-2"
+                          onClick={() =>
+                            item.cantidad > 1
+                              ? actualizarCantidad(item.nombre, item.cantidad - 1)
+                              : eliminarDelCarrito(item.nombre)
+                          }>➖</button>
+                        <span>{item.cantidad}</span>
+                        {/* ➕ aumentar */}
+                        <button className="btn btn-sm btn-outline-dark ms-2"
+                          onClick={() => actualizarCantidad(item.nombre, item.cantidad + 1)}>➕</button>
+                      </div>
+                      <small>{item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })} c/u</small>
                     </div>
                   </div>
+                  {/* Eliminar */}
                   <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
                 </div>
               ))}
               <div className="mt-3">
                 <h6>Total: {totalCarrito.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}</h6>
-                <button
-                  className="btn btn-dark w-100"
+                <button className="btn btn-dark w-100"
                   style={{ backgroundColor: '#FFD600', color: 'black' }}
-                  onClick={handleIrCarrito}
-                >
-                  Pagar
-                </button>
+                  onClick={handleIrCarrito}>Hacer Pedido</button>
               </div>
             </>
           )}

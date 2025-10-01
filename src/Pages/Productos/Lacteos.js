@@ -16,9 +16,10 @@ function Lacteos() {
   const {
     carrito,
     mostrarCarrito,
-    setMostrarCarrito,
+    toggleCarrito,
     agregarAlCarrito,
     eliminarDelCarrito,
+    actualizarCantidad,
     totalCarrito
   } = useCarrito();
 
@@ -80,7 +81,7 @@ function Lacteos() {
   // Cambiar cantidad
   const handleCantidadChange = (index, nuevaCantidad) => {
     const productosActualizados = [...productos];
-    productosActualizados[index].cantidad = parseInt(nuevaCantidad);
+    productosActualizados[index].cantidad = Math.max(1, parseInt(nuevaCantidad) || 1);
     setProductos(productosActualizados);
   };
 
@@ -90,7 +91,7 @@ function Lacteos() {
       Swal.fire("Carrito vacío", "Agrega productos antes de pagar", "warning");
       return;
     }
-    navigate("/Carrito"); // 👉 lleva a la página Carrito
+    navigate("/Carrito");
   };
 
   return (
@@ -205,7 +206,7 @@ function Lacteos() {
       <button
         className="btn btn-dark rounded-circle shadow-lg position-fixed"
         style={{ bottom: '20px', right: '20px', width: '60px', height: '60px', zIndex: 1000, backgroundColor: '#FFD600' }}
-        onClick={() => setMostrarCarrito(!mostrarCarrito)}
+        onClick={toggleCarrito}  // ✅ corregido
       >
         🛒
         {carrito.length > 0 && (
@@ -247,7 +248,22 @@ function Lacteos() {
                       {item.cantidad} x {item.precio.toLocaleString('es-CO', { style: 'currency', currency: 'COP' })}
                     </div>
                   </div>
-                  <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
+                  <div className="d-flex align-items-center">
+                    <button
+                      className="btn btn-sm btn-outline-dark me-1"
+                      onClick={() => actualizarCantidad(item.nombre, item.cantidad - 1)}
+                      disabled={item.cantidad <= 1}
+                    >
+                      ➖
+                    </button>
+                    <button
+                      className="btn btn-sm btn-outline-dark me-2"
+                      onClick={() => actualizarCantidad(item.nombre, item.cantidad + 1)}
+                    >
+                      ➕
+                    </button>
+                    <button className="btn btn-sm btn-dark" onClick={() => eliminarDelCarrito(item.nombre)} style={{ backgroundColor: '#FFD600' }}>🗑</button>
+                  </div>
                 </div>
               ))}
               <div className="mt-3">
@@ -257,7 +273,7 @@ function Lacteos() {
                   style={{ backgroundColor: '#FFD600', color: 'black' }}
                   onClick={handleIrCarrito}
                 >
-                  Pagar
+                  Hacer Pedido
                 </button>
               </div>
             </>

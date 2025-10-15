@@ -77,12 +77,11 @@ function PaginaPrincipal() {
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
               </li>
               <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
-              <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/Carrito">Mi Carrito</Link></li>
             </ul>
             <form className="d-flex me-3" onSubmit={handleSearch}>
               <input
@@ -121,6 +120,8 @@ function PaginaPrincipal() {
                 <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                   <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
                   <li><Link className="dropdown-item" to="/MisPedidos">Mis Pedidos</Link></li>
+
+
                   <li><hr className="dropdown-divider" /></li>
                   <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
                 </ul>

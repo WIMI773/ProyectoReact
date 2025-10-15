@@ -11,21 +11,17 @@ function Carrito() {
     eliminarDelCarrito, 
     vaciarCarrito,
     actualizarCantidad,
-    abrirCarrito, 
-    cerrarCarrito, 
-    toggleCarrito // 👈 ahora usamos estas funciones
+    cerrarCarrito
   } = useCarrito();
 
   const navigate = useNavigate();
 
-  // 🔍 Buscador
   const [searchTerm, setSearchTerm] = useState("");
   const handleSearch = (e) => {
     e.preventDefault();
     navigate(`/buscar?query=${searchTerm}`);
   };
 
-  // 👤 Usuario autenticado
   const [user, setUser] = useState(null);
   useEffect(() => {
     const unsubscribe = onAuthStateChanged(auth, (usuario) => {
@@ -166,10 +162,10 @@ function Carrito() {
 
       {/* 🛒 Contenido del carrito */}
       <div className="container py-5">
-        <h2 className="mb-4">Carrito de Compras</h2>
+        <h2 className="mb-4 text-center fw-bold">🛒 Carrito de Compras</h2>
 
         {carrito.length === 0 ? (
-          <p>No tienes productos en el carrito.</p>
+          <p className="text-center">No tienes productos en el carrito.</p>
         ) : (
           <>
             <ul className="list-group mb-3">
@@ -179,7 +175,6 @@ function Carrito() {
                   className="list-group-item d-flex justify-content-between align-items-center"
                 >
                   <div className="d-flex align-items-center">
-                    {/* 🖼️ Imagen del producto */}
                     <img
                       src={item.src || "/assets/default.jpg"}
                       alt={item.nombre}
@@ -200,7 +195,6 @@ function Carrito() {
                     </div>
                   </div>
 
-                  {/* Controles de cantidad */}
                   <div className="d-flex align-items-center">
                     <button
                       className="btn btn-outline-secondary btn-sm me-2"
@@ -221,7 +215,6 @@ function Carrito() {
                     </button>
                   </div>
 
-                  {/* Botón eliminar */}
                   <button
                     className="btn btn-danger btn-sm ms-3"
                     onClick={() => eliminarDelCarrito(item.nombre)}
@@ -232,7 +225,7 @@ function Carrito() {
               ))}
             </ul>
 
-            <h4>
+            <h4 className="text-center">
               Total:{" "}
               {totalCarrito.toLocaleString("es-CO", {
                 style: "currency",
@@ -240,23 +233,32 @@ function Carrito() {
               })}
             </h4>
 
-            {/* ✅ Redirigir al checkout */}
-            <button
-              className="btn btn-success mt-3"
-              onClick={() => {
-                cerrarCarrito(); // 👈 cerramos el carrito al confirmar
-                navigate("/Checkout");
-              }}
-            >
-              Confirmar Pedido ✅
-            </button>
+            <div className="text-center mt-4">
+              <button
+                className="btn btn-success me-2"
+                onClick={() => {
+                  cerrarCarrito();
+                  navigate("/Checkout");
+                }}
+              >
+                Confirmar Pedido ✅
+              </button>
 
-            <button
-              className="btn btn-secondary mt-3 ms-2"
-              onClick={vaciarCarrito}
-            >
-              Vaciar Carrito 🗑
-            </button>
+              <button
+                className="btn btn-secondary me-2"
+                onClick={vaciarCarrito}
+              >
+                Vaciar Carrito 🗑
+              </button>
+
+              {/* 🔙 Botón de volver */}
+              <button
+                className="btn btn-warning fw-bold"
+                onClick={() => navigate(-1)}
+              >
+                ← Volver
+              </button>
+            </div>
           </>
         )}
       </div>

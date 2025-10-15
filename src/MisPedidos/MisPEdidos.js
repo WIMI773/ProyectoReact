@@ -108,7 +108,6 @@ function MisPedidos() {
     }
   };
 
-  // 🔹 Badge dinámico según estado
   const badgeEstado = (estado) => {
     switch (estado) {
       case "Pendiente":
@@ -128,8 +127,14 @@ function MisPedidos() {
     <div className="container py-5">
       <h2 className="mb-4 text-center fw-bold">📦 Mis Pedidos</h2>
 
+      {/* 🔙 Botón de Volver */}
       <div className="text-center mb-4">
-        
+        <button
+          className="btn btn-secondary fw-bold px-4"
+          onClick={() => navigate(-1)} // 👈 vuelve a la página anterior
+        >
+          ⬅ Volver
+        </button>
       </div>
 
       {pedidos.length === 0 ? (
@@ -195,7 +200,6 @@ function MisPedidos() {
                     >
                       🗑 Cancelar
                     </button>
-                    
                   </div>
                 </div>
               </div>

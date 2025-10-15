@@ -118,12 +118,11 @@ function Lacteos() {
                   <li><Link className="dropdown-item" to="/Aseo">Aseo</Link></li>
                   <li><Link className="dropdown-item" to="/Verduras">Verduras</Link></li>
                   <li><hr className="dropdown-divider" /></li>
-                  <li><Link className="dropdown-item" to="/ver-todos">Ver todos</Link></li>
                 </ul>
               </li>
               <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
-              <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/Carrito">Mi Carrito</Link></li>
             </ul>
 
             {/* Buscador */}

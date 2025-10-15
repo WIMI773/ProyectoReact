@@ -127,7 +127,7 @@ function Frutas() {
               </li>
               <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
               <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
-              <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
+              <li className="nav-item"><Link className="nav-link" to="/Carrito">Mi Carrito</Link></li>
             </ul>
 
             {/* 🔍 Buscador */}

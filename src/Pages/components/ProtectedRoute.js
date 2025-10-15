@@ -10,9 +10,7 @@ function ProtectedRoute({ children }) {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const timer = setTimeout(() => {
-      setFakeLoading(false);
-    }, 5000);
+    const timer = setTimeout(() => setFakeLoading(false), 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -23,24 +21,31 @@ function ProtectedRoute({ children }) {
         title: 'Acceso restringido',
         text: 'Debes iniciar sesión para acceder a esta página.',
         timer: 2000,
-        showConfirmButton: false
+        showConfirmButton: false,
       }).then(() => {
         navigate('/', { replace: true });
       });
     }
   }, [loading, fakeLoading, user, navigate]);
 
+  // 🟡 Mientras carga, devolvemos algo válido (un spinner o texto)
   if (loading || fakeLoading) {
-    
+    return (
+      <div className="d-flex justify-content-center align-items-center vh-100">
+        <div className="spinner-border text-warning" role="status">
+          <span className="visually-hidden">Cargando...</span>
+        </div>
+      </div>
+    );
   }
 
+  // 🔴 Si no hay usuario, evitamos renderizar hijos inválidos
   if (!user) {
-    return null;
+    return <Navigate to="/" replace />;
   }
 
+  // ✅ Si hay usuario, renderizamos la página protegida
   return children;
 }
 
 export default ProtectedRoute;
-
-

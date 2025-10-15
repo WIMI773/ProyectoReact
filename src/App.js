@@ -24,6 +24,7 @@ import Perfil from './Pages/perfil/perfil.js';
 import MisPedidos from './MisPedidos/MisPEdidos.js';
 import Carrito from './Pages/Carrito/Carrito.js';
 import Checkout from './Pages/Checkout/Checkout.js';
+import Configuracion from './Pages/Configuracion/Configuracion.js';
 function App() {
   return (
     <BrowserRouter>
@@ -52,12 +53,14 @@ function App() {
           <Route path="/PaginaPrincipal" element={<ProtectedRoute> <PaginaPrincipal /> </ProtectedRoute>} />
           <Route path="/ListUsersPage" element={<ProtectedRoute> <ListUsersPage /> </ProtectedRoute>} />
           <Route path="/perfil" element={<ProtectedRoute> <Perfil /> </ProtectedRoute>} />
-                    <Route path="/MisPedidos" element={<ProtectedRoute> <MisPedidos /> </ProtectedRoute>} />
-                    <Route path="/Checkout" element={<ProtectedRoute> <Checkout /> </ProtectedRoute>} />
-                    <Route path="/Carrito" element={<ProtectedRoute> <Carrito /> </ProtectedRoute>} />
+          <Route path="/MisPedidos" element={<ProtectedRoute> <MisPedidos /> </ProtectedRoute>} />
+          <Route path="/Checkout" element={<ProtectedRoute> <Checkout /> </ProtectedRoute>} />
+          <Route path="/Carrito" element={<ProtectedRoute> <Carrito /> </ProtectedRoute>} />
+                    <Route path="/Configuracion" element={<ProtectedRoute> <Configuracion /> </ProtectedRoute>} />
 
 
-          
+
+
 
 
 

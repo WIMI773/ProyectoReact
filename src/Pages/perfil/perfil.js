@@ -62,7 +62,7 @@ function Perfil() {
                 </li>
                 <li className="nav-item"><Link className="nav-link" to="/ofertas">Ofertas</Link></li>
                 <li className="nav-item"><Link className="nav-link" to="/contacto">Contacto</Link></li>
-                <li className="nav-item"><Link className="nav-link" to="/ListUsersPage">Usuarios</Link></li>
+                <li className="nav-item"><Link className="nav-link" to="/Carrito">Mi Carrito</Link></li>
               </ul>
               <form className="d-flex me-3" onSubmit={handleSearch}>
                 <input
@@ -133,7 +133,7 @@ function Perfil() {
             <div className="dropdown">
               <button
                 className="btn btn-outline-light dropdown-toggle d-flex align-items-center"
-                style={{ backgroundColor: '#F44336', color: 'black' }}
+                style={{ backgroundColor: '#ffffffff', color: 'black' }}
                 type="button"
                 id="userDropdown"
                 data-bs-toggle="dropdown"
@@ -152,7 +152,8 @@ function Perfil() {
               </button>
               <ul className="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
                 <li><Link className="dropdown-item" to="/perfil">Mi Perfil</Link></li>
-                <li><Link className="dropdown-item" to="/mis-pedidos">Mis Pedidos</Link></li>
+                <li><Link className="dropdown-item" to="/MisPEdidos">Mis Pedidos</Link></li>
+
                 <li><hr className="dropdown-divider" /></li>
                 <li><button className="dropdown-item text-danger" onClick={handleLogout}>Cerrar Sesión</button></li>
               </ul>
@@ -184,8 +185,14 @@ function Perfil() {
               <p><strong>Email:</strong> {user.email}</p>
               <p><strong>ID:</strong> <span className="text-muted">{user.uid}</span></p>
               <div className="mt-3">
-                <button className="btn btn-outline-dark me-2 bg-warning text-dark">Editar Perfil</button>
-                <button className="btn btn-outline-danger">Cambiar Contraseña</button>
+                <Link
+      to="/Configuracion" // 👈 ruta destino
+      className="btn btn-outline-dark me-2 bg-warning text-dark"
+    >
+      Editar Perfil
+    </Link>
+  
+                
               </div>
             </div>
           </div>
